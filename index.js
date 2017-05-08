@@ -54,6 +54,27 @@ app.get("/order-page", function(req, resp){
     resp.sendFile(CLF+"/order-page.html");
 });
 
+/**********************************ORDER/MENU PAGE*************************************/
+app.post("/menu/items", function(req, resp){
+    pg.connect(dbURL, function(err, client, done){
+        if(err){
+            console.log(err);
+        }
+        client.query("SELECT*FROM food ORDER BY id", [], function(err, result){
+            done();
+            if(err){
+                console.log(err);
+            }
+            var array = result.rows;
+            
+            resp.send({
+                status: "success",
+                Array: array
+            });
+        });
+    });
+});
+
 /**********************************Kitchen*************************************/
 var unmakeOrders = [];
 var cookedOrders = [];
@@ -214,15 +235,6 @@ app.post("/edit-employee", function(req, resp){
     };
 });
 
-/**********************************LISTEN*************************************/
-sv.listen(NEWPORT, function(err){
-    if(err){
-        console.log(err);
-        return false;
-    }
-    console.log(NEWPORT+" is running");
-});
-
 /**********************************LOGIN*************************************/
 app.post("/accountLOGIN", function(req, resp){
     pg.connect(dbURL, function(err, client, done){
@@ -258,4 +270,13 @@ app.post("/accountLOGIN", function(req, resp){
 app.post("/logout", function(req, resp){
     req.session.destroy();
     resp.end("success");
+});
+
+/**********************************LISTEN*************************************/
+sv.listen(NEWPORT, function(err){
+    if(err){
+        console.log(err);
+        return false;
+    }
+    console.log(NEWPORT+" is running");
 });

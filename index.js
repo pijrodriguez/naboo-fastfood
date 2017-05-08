@@ -54,6 +54,28 @@ app.get("/order-page", function(req, resp){
     resp.sendFile(CLF+"/order-page.html");
 });
 
+/**********************************Kitchen*************************************/
+var unmakeOrders = [];
+var cookedOrders = [];
+app.post("/removeTheFirstItem", function(req, resp){
+    if(req.body.status == "remove"){
+        cookedOrders.add(unmakeOrders[0]);
+        unmakeOrders.shift();
+        resp.send({
+            status:"success",
+            unmakeOrders:unmakeOrders
+        })
+    }
+});
+app.post("/checkUnmakeOrder", function(req, resp){
+    if(req.body.status == "check"){
+        resp.send({
+            status:"success",
+            unmakeOrders:unmakeOrders
+        })
+    }
+});
+
 /**********************************OPEN/CLOSE STORE*************************************/
 //OPEN STORE
 app.post("/open-store", function(req, resp){

@@ -13,7 +13,6 @@ var app = express();
 const sv = require("http").createServer(app);
 var io = require("socket.io")(sv);
 
-var io = require("socket.io")(sv);
 io.on("connection", function(socket){
     socket.on("disconnect", function(){
     });

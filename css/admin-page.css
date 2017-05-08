@@ -1,0 +1,348 @@
+/**************HEADER DIV**************/
+#headerDiv {
+    width:99vw;
+    height:20vh;
+    background-color: #EEFF41;
+    border-radius: 20px;
+}
+
+#upperDiv{
+    margin:2vh 0 0 0;
+    height:20%;
+}
+
+#lowerDiv{
+    height:50%;
+}
+
+#openStoreButton {
+    display:inline-block;
+    margin: 0 0 0 2vw;
+}
+
+#closeStoreButton {
+    display:inline-block;
+    margin: 0 0 0 33vw;
+}
+
+#employeeName{
+    display:inline-block;
+    margin: 0 0 0 35vw;
+}
+
+#employeeId {
+    margin: 0 0 0 46vw;
+}
+
+/**************LEFT CONTAINER DIV**************/
+#leftContainerDiv {
+    width:15vw;
+    height:60vh;
+    float: left;
+    margin:10px 0 0 10px;
+}
+
+/**************ITEMS DIV**************/
+#checkSalesButton {
+    margin:20px 0 0 10px;
+    width:15vw;
+    height:5vh;
+}
+
+#itemsDiv {
+    background-color: #EEFF41;
+    width:15vw;
+    height:25vh;
+    margin:10px 0 0 10px;
+}
+
+#manageItems {
+    margin:15px 0 0 15px;
+}
+
+.itemButtons {
+    width:85%;
+    height:20%;
+    margin: 5px 0 0 15px;
+}
+
+/**************EMPLOYEE DIV**************/
+
+#employeeDiv {
+    background-color: #EEFF41;
+    width:15vw;
+    height:25vh;
+    margin:10px 0 0 10px;
+}
+
+#manageEmployees {
+    margin:15px 0 10px 15px;
+}
+
+.employeeButtons {
+    width:85%;
+    height:20%;
+    margin: 5px 0 0 15px;
+}
+
+/**************ADD ITEM DIV**************/
+
+#addItemDiv {
+    background-color: #EEFF41;
+    width: 80vw;
+    height: 60vh;
+    position: absolute;
+    margin:25px 0 0 18vw;
+    display: none;
+}
+
+#addItemText {
+    margin: 10px 0 0 20px;
+}
+
+#addItemNameLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#addItemNameInput {
+    margin: 10px 0 0 0;
+    float: left;
+}
+
+#addItemPriceLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#addItemPriceInput {
+    margin: 10px 0 0 0;
+    float: left;
+}
+
+#addItemSave {
+    margin: 10px 0 0 10px;
+}
+
+/**************REMOVE ITEM DIV**************/
+
+#removeItemDiv {
+    background-color: #EEFF41;
+    width: 80vw;
+    height: 60vh;
+    position: absolute;
+    margin:25px 0 0 18vw;
+    display: none;
+}
+
+#removeItemText {
+    margin: 10px 0 0 20px;
+}
+
+#removeItemNameLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#removeItemList {
+    margin: 10px 0 0 10px;
+    float: left;
+}
+
+#removeItemSave {
+    margin: 10px 0 0 10px;
+}
+
+/**************EDIT ITEM DIV**************/
+
+#editItemDiv {
+    background-color: #EEFF41;
+    width: 80vw;
+    height: 60vh;
+    position: absolute;
+    margin:25px 0 0 18vw;
+    display: block;
+}
+
+#editItemText {
+    margin: 10px 0 0 20px;
+}
+
+#selectItemLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#editItemList {
+    margin: 10px 0 0 10px;
+    float: left;
+}
+
+#editItemNameLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#editItemNameInput {
+    margin: 10px 0 0 0;
+    float: left;
+}
+
+#editItemPriceLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#editItemPriceInput {
+    margin: 10px 0 0 0;
+    float: left;
+}
+
+#editItemSave {
+    margin: 10px 0 0 10px;
+}
+
+/**************ADD EMPLOYEE DIV**************/
+
+#addEmployeeDiv {
+    background-color: #EEFF41;
+    width: 80vw;
+    height: 60vh;
+    position: absolute;
+    margin:25px 0 0 18vw;
+    display: none;
+}
+
+#addEmployeeText {
+    margin: 10px 0 0 20px;
+}
+
+#selectPositionLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#selectPositionList {
+    margin: 10px 0 0 10px;
+    float: left;
+}
+
+#addEmployeeNameLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#addEmployeeNameInput {
+    margin: 10px 0 0 0;
+    float: left;
+}
+
+#addEmployeeIdLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#addEmployeeIdInput {
+    margin: 10px 0 0 0;
+    float: left;
+}
+
+#addEmployeePasswordLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#addEmployeePasswordInput {
+    margin: 10px 0 0 0;
+    float: left;
+}
+#addEmployeeSave {
+    margin: 10px 0 0 10px;
+}
+
+/**************REMOVE EMPLOYEE DIV**************/
+
+#removeEmployeeDiv {
+    background-color: #EEFF41;
+    width: 80vw;
+    height: 60vh;
+    position: absolute;
+    margin:25px 0 0 18vw;
+    display: none;
+}
+
+#removeEmployeeText {
+    margin: 10px 0 0 20px;
+}
+
+#removeSelectEmployeeLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#removeEmployeeList {
+    margin: 10px 0 0 10px;
+    float: left;
+}
+
+#removeEmployeeSave {
+    margin: 10px 0 0 10px;
+}
+
+/**************EDIT EMPLOYEE DIV**************/
+
+#editEmployeeDiv {
+    background-color: #EEFF41;
+    width: 80vw;
+    height: 60vh;
+    position: absolute;
+    margin:25px 0 0 18vw;
+    display: none;
+}
+
+#editEmployeeText {
+    margin: 10px 0 0 20px;
+}
+
+#editSelectEmployeeLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#editEmployeeList {
+    margin: 10px 0 0 10px;
+    float: left;
+}
+
+#editEmployeeNameLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#editEmployeeNameInput {
+    margin: 10px 0 0 0;
+    float: left;
+}
+
+#editEmployeeIdLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#editEmployeeIdInput {
+    margin: 10px 0 0 0;
+    float: left;
+}
+
+#editEmployeePasswordLabel {
+    margin: 10px 0 0 20px;
+    float: left;
+}
+
+#editEmployeePasswordInput {
+    margin: 10px 0 0 0;
+    float: left;
+}
+#editEmployeeSave {
+    margin: 10px 0 0 10px;
+}

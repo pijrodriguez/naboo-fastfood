@@ -9,9 +9,9 @@ const pg = require("pg");
 
 var CLF = path.resolve(__dirname, "pages");
 var app = express();
-var io = require("socket.io")(sv);
 const sv = require("http").createServer(app);
 
+var io = require("socket.io")(sv);
 io.on("connection", function(socket){
     socket.on("disconnect", function(){
     });
@@ -22,7 +22,9 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-app.use("/js", express.static("build"));
+app.use("/scripts", express.static("build"));
+
+app.use("/pics", express.static("imgs"));
 
 app.use(session({
     secret:"welcome to naboo",

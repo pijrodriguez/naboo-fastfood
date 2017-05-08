@@ -13,6 +13,7 @@ var app = express();
 const sv = require("http").createServer(app);
 var io = require("socket.io")(sv);
 
+var io = require("socket.io")(sv);
 io.on("connection", function(socket){
     socket.on("disconnect", function(){
     });
@@ -23,8 +24,11 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
+app.use("/pics", express.static("imgs"));
+
 app.use("/css", express.static("css"));
 app.use("/scripts", express.static("build"));
+
 
 app.use(session({
     secret:"welcome to naboo",

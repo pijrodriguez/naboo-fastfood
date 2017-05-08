@@ -23,8 +23,11 @@ $(document).ready(function(){
                 if(resp.status == "success"){
                     location.href = "/admin-page";
                 }
-                if(resp.status == "success2"){
+                else if(resp.status == "success2"){
                     location.href = "/kitchen-page";
+                }
+                else {
+                    alert("Incorrect Employee ID or password");
                 }
             }
         }); 

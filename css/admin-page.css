@@ -6,8 +6,14 @@
     border-radius: 20px;
 }
 
+#logoutButton {
+    margin:0 0 0 92vw;
+    width: 80px;
+    height: 25px;
+}
+
 #upperDiv{
-    margin:2vh 0 0 0;
+    margin: 1vh 0 2vh 0;
     height:20%;
 }
 
@@ -18,16 +24,21 @@
 #openStoreButton {
     display:inline-block;
     margin: 0 0 0 2vw;
+    width: 120px;
+    height: 35px;
 }
 
 #closeStoreButton {
     display:inline-block;
-    margin: 0 0 0 33vw;
+    margin: 0 0 0 36vw;
+    width: 120px;
+    height: 35px;
 }
 
 #employeeName{
     display:inline-block;
-    margin: 0 0 0 35vw;
+    font-size: 40px;
+    margin: 0 0 0 34vw;
 }
 
 #employeeId {
@@ -93,7 +104,7 @@
     height: 60vh;
     position: absolute;
     margin:25px 0 0 18vw;
-    display: none;
+    display: block;
 }
 
 #addItemText {
@@ -161,7 +172,7 @@
     height: 60vh;
     position: absolute;
     margin:25px 0 0 18vw;
-    display: block;
+    display: none;
 }
 
 #editItemText {
@@ -170,36 +181,38 @@
 
 #selectItemLabel {
     margin: 10px 0 0 20px;
-    float: left;
+    display: inline-block;
+
 }
 
 #editItemList {
-    margin: 10px 0 0 10px;
-    float: left;
+    margin: 10px 0 0 0;
+    display: inline-block;
 }
 
 #editItemNameLabel {
-    margin: 10px 0 0 20px;
-    float: left;
+    margin: 10px 0 0 10px;
+    display: inline-block;
 }
 
 #editItemNameInput {
-    margin: 10px 0 0 0;
-    float: left;
+    margin: 10px 0 0 0px;
+    display: inline-block;
 }
 
 #editItemPriceLabel {
-    margin: 10px 0 0 20px;
-    float: left;
+    margin: 10px 0 0 10px;
+    display: inline-block;
 }
 
 #editItemPriceInput {
     margin: 10px 0 0 0;
-    float: left;
+    display: inline-block;
 }
 
 #editItemSave {
     margin: 10px 0 0 10px;
+    display: inline-block;
 }
 
 /**************ADD EMPLOYEE DIV**************/

@@ -18,7 +18,7 @@ io.on("connection", function(socket){
     });
 });
 
-var dbURL = process.env.DATABASE_URL || //"postgres://postgres:PASSWORD@localhost:5432/naboo";
+var dbURL = process.env.DATABASE_URL || "postgres://postgres:Jelapij8@localhost:5432/naboo";
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -44,7 +44,11 @@ app.get("/kitchen-page", function(req, resp){
     resp.sendFile(CLF+"/kitchen-page.html");
 });
 app.get("/admin-page", function(req, resp){
-    resp.sendFile(CLF+"/admin-page.html");
+    if(req.session.user){
+        resp.sendFile(CLF+"/admin-page.html");
+    } else {
+        resp.sendFile(CLF+"/login-page.html");
+    }
 });
 app.get("/main-page", function(req, resp){
     resp.sendFile(CLF+"/main.html");
@@ -114,6 +118,55 @@ app.post("/close-store", function(req, resp){
     resp.end("Success");
 });
 
+/**********************************SEND USER INFO*************************************/
+app.post("/get-user", function(req, resp){
+    resp.send({
+        status: "Success",
+        user: JSON.stringify(req.session.user)
+    })
+});
+
+/**********************************SEND EMPLOYEE NAMES*************************************/
+app.post("/get-employees", function(req, resp){
+    pg.connect(dbURL, function (err, client, done) {
+        if (err) {
+            console.log(err);
+            return false;
+        }
+
+        client.query("SELECT name FROM users", function(err,result){
+            done();
+            if(err){
+                return false;
+            }
+            resp.send({
+                status: "Success",
+                users: JSON.stringify(result.rows)
+            });
+        })
+    })
+})
+
+/**********************************SEND ITEM NAMES*************************************/
+app.post("/get-items", function(req, resp){
+    pg.connect(dbURL, function (err, client, done) {
+        if (err) {
+            console.log(err);
+            return false;
+        }
+
+        client.query("SELECT item FROM food", function(err,result){
+            done();
+            if(err){
+                return false;
+            }
+            resp.send({
+                status: "Success",
+                items: JSON.stringify(result.rows)
+            });
+        })
+    })
+})
 /**********************************ADD ITEM*************************************/
 app.post("/add-item", function(req, resp){
     if(req.body.type == "create"){

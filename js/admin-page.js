@@ -33,7 +33,10 @@ var addItemButton = document.getElementById("addItemButton"),
     editEmployeeSave = document.getElementById("editEmployeeSave"),
     openStoreButton = document.getElementById("openStoreButton"),
     closeStoreButton = document.getElementById("closeStoreButton"),
-    closeStoreButton = document.getElementById("closeStoreButton")
+    closeStoreButton = document.getElementById("closeStoreButton"),
+    employeeName = document.getElementById("employeeName"),
+    employeeId = document.getElementById("employeeId"),
+    logoutButton = document.getElementById("logoutButton")
 ;
 
 //***********************SETTING DISPLAY DIV******************************//
@@ -54,6 +57,27 @@ removeItemButton.addEventListener("click", function(){
     addEmployeeDiv.style.display = "none";
     removeEmployeeDiv.style.display = "none";
     editEmployeeDiv.style.display = "none";
+
+    //*****************************DROP DOWN LIST**********************************//
+
+    removeItemList.innerHTML = "";
+    //ajax to the server, get the item names and display it to the dropdown list
+    $.ajax({
+        url:"/get-items",
+        type:"post",
+        success:function(resp){
+            if(resp.status == "Success"){
+                var foodItems = JSON.parse(resp.items);
+
+                for(i=0;i<foodItems.length;i++){
+                    var food = document.createElement("option");
+                    food.value = foodItems[i].item;
+                    food.textContent = foodItems[i].item;
+                    removeItemList.appendChild(food);
+                }
+            }
+        }
+    })
 });
 
 editItemButton.addEventListener("click", function(){
@@ -63,6 +87,27 @@ editItemButton.addEventListener("click", function(){
     addEmployeeDiv.style.display = "none";
     removeEmployeeDiv.style.display = "none";
     editEmployeeDiv.style.display = "none";
+
+    //*****************************DROP DOWN LIST**********************************//
+
+    editItemList.innerHTML = "";
+    //ajax to the server, get the item names and display it to the dropdown list
+    $.ajax({
+        url:"/get-items",
+        type:"post",
+        success:function(resp){
+            if(resp.status == "Success"){
+                var foodItems = JSON.parse(resp.items);
+
+                for(i=0;i<foodItems.length;i++){
+                    var food = document.createElement("option");
+                    food.value = foodItems[i].item;
+                    food.textContent = foodItems[i].item;
+                    editItemList.appendChild(food);
+                }
+            }
+        }
+    })
 });
 
 addEmployeeButton.addEventListener("click", function(){
@@ -81,6 +126,28 @@ removeEmployeeButton.addEventListener("click", function(){
     addEmployeeDiv.style.display = "none";
     removeEmployeeDiv.style.display = "block";
     editEmployeeDiv.style.display = "none";
+
+    //*****************************DROP DOWN LIST**********************************//
+
+    removeEmployeeList.innerHTML = "";
+    //ajax to the server, get the employee names and display it to the dropdown list
+    $.ajax({
+        url:"/get-employees",
+        type:"post",
+        success:function(resp){
+            if(resp.status == "Success"){
+                console.log(resp.users);
+                var employees = JSON.parse(resp.users);
+
+                for(i=0;i<employees.length;i++){
+                    var employeeName = document.createElement("option");
+                    employeeName.value = employees[i].name;
+                    employeeName.textContent = employees[i].name;
+                    removeEmployeeList.appendChild(employeeName);
+                }
+            }
+        }
+    })
 });
 
 editEmployeeButton.addEventListener("click", function(){
@@ -90,7 +157,52 @@ editEmployeeButton.addEventListener("click", function(){
     addEmployeeDiv.style.display = "none";
     removeEmployeeDiv.style.display = "none";
     editEmployeeDiv.style.display = "block";
+
+    //*****************************DROP DOWN LIST**********************************//
+
+    editEmployeeList.innerHTML = "";
+    //ajax to the server, get the employee names and display it to the dropdown list
+    $.ajax({
+        url:"/get-employees",
+        type:"post",
+        success:function(resp){
+            if(resp.status == "Success"){
+                console.log(resp.users);
+                var employees = JSON.parse(resp.users);
+
+                for(i=0;i<employees.length;i++){
+                    var employeeName = document.createElement("option");
+                    employeeName.value = employees[i].name;
+                    employeeName.textContent = employees[i].name;
+                    editEmployeeList.appendChild(employeeName);
+                }
+            }
+        }
+    })
+
 });
+
+//*******************************************************************//
+//ajax to the server and display the info of the admin that is logged in to the admin-page
+
+$(document).ready(function(){
+    $.ajax({
+        url:"/get-user",
+        type:"post",
+        success:function(resp){
+            if(resp.status == "Success"){
+                console.log(resp.user);
+                var admin = JSON.parse(resp.user);
+
+                //change values for employeeName and employeeId
+                employeeName.innerHTML = admin.name.toUpperCase();
+                employeeId.innerHTML = admin.emp_id;
+            }
+        }
+    })
+
+});
+
 
 //**************************ADD ITEM******************************//
 //TODO [Patrick] : Add item settings still needs an image input (URL or File Upload)
@@ -111,7 +223,6 @@ addItemSave.addEventListener("click", function(){
 });
 
 //**************************REMOVE ITEM******************************//
-//TODO [Patrick] : Ajax to the server after displaying the removeItemDiv, get the items from the DB, and add it to the ddl
 
 removeItemSave.addEventListener("click", function(){
     $.ajax({
@@ -129,7 +240,6 @@ removeItemSave.addEventListener("click", function(){
 
 //**************************EDIT ITEM******************************//
 //TODO [Patrick] : Edit item settings still needs an image input (URL or File Upload)
-//TODO [Patrick] : Ajax to the server after displaying the editItemDiv, get the items from the DB, and add it to the ddl
 //TODO [Patrick] : Ajax to the server when user selects from the ddl and put corresponding values in each of the inputs
 
 editItemSave.addEventListener("click", function(){
@@ -168,7 +278,6 @@ addEmployeeSave.addEventListener("click", function(){
 });
 
 //**************************REMOVE EMPLOYEE******************************//
-//TODO [Patrick] : Ajax to the server after displaying the removeEmployeeDiv, get the employee names from the DB, and add it to the ddl
 
 removeEmployeeSave.addEventListener("click", function(){
     $.ajax({
@@ -185,7 +294,6 @@ removeEmployeeSave.addEventListener("click", function(){
 });
 
 //**************************EDIT EMPLOYEE******************************//
-//TODO [Patrick] : Ajax to the server after displaying the editEmployeeDiv, get the employee names from the DB, and add it to the ddl
 //TODO [Patrick] : Ajax to the server when user selects from the ddl and put corresponding values in each of the inputs
 
 editEmployeeSave.addEventListener("click", function(){
@@ -193,9 +301,9 @@ editEmployeeSave.addEventListener("click", function(){
         url:"/edit-employee",
         type:"post",
         data:{
-            old_employee_name: editItemList.value,
-            new_employee_name: editItemNameInput.value,
-            employee_id: editItemPriceInput.value,
+            old_employee_name: editEmployeeList.value,
+            new_employee_name: editEmployeeNameInput.value,
+            employee_id: editEmployeeIdInput.value,
             password: editEmployeePasswordInput.value,
             type: "edit"
         },
@@ -214,6 +322,7 @@ openStoreButton.addEventListener("click", function(){
         success:function(resp){
             if(resp == "Success"){
                 openStoreButton.disabled = true;
+                closeStoreButton.disabled = false;
             }
         }
     })
@@ -226,11 +335,22 @@ closeStoreButton.addEventListener("click", function(){
         success:function(resp){
             if(resp == "Success"){
                 closeStoreButton.disabled = true;
+                openStoreButton.disabled = false;
             }
         }
     })
 });
 
 //**************************USER LOG OUT******************************//
-//TODO [Patrick] : Add logout button and its functionalities
+logoutButton.addEventListener("click", function () {
+    $.ajax({
+        url:"/logout",
+        type:"post",
+        success:function(resp){
+            if(resp == "success"){
+                location.reload();
+            }
+        }
+    })
+});
 

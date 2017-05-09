@@ -1,10 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Kitchen</title>
+    <style>
+        #showMaking{
+            position: fixed;
+            bottom: 0;
+            height: auto;
+            width: 95vw;
+        }
+        .itemsInMaking{
+            display: inline-block;
+            height:auto;
+            width:15vw;
+        }
+        #make{
+            margin: 0 5vw 0 0;
+        }
+
+    </style>
 </head>
 <body>
-
+<div id="showMaking">
+    Item: <div id="item" class="itemsInMaking"></div>
+    Quantity: <div id="quantity" class="itemsInMaking"></div>
+    <button id="make">MAKE</button>
+    Prepared: <div id="prepared" class="itemsInMaking"></div>
+    <button id="serve">Serve</button>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src='/scripts/kitchenbundle.js'></script>
 </body>
+
 </html>

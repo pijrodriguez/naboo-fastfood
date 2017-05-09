@@ -1,3 +1,10 @@
+/**********************************TESTING*************************************/
+module.exports = {
+    add: function (a, b) {
+        return a + b;
+    }
+};
+
 /**********************************CONSTS & VARS*************************************/
 const NEWPORT = process.env.PORT || 10000;
 
@@ -18,7 +25,7 @@ io.on("connection", function(socket){
     });
 });
 
-var dbURL = process.env.DATABASE_URL || "postgres://postgres:PASSWORD@localhost:5432/naboo";
+var dbURL = process.env.DATABASE_URL || "postgres://postgres:StarWars1@localhost:5432/naboo";
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -332,3 +339,7 @@ sv.listen(NEWPORT, function(err){
     }
     console.log(NEWPORT+" is running");
 });
+
+
+
+

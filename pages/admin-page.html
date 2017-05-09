@@ -6,11 +6,12 @@
         <link rel="stylesheet" type="text/css" href="css/admin-page.css" />
     </head>
     <body>
+        <button id="logoutButton">Log out</button>
         <div id="headerDiv">
             <div id="upperDiv">
-                <button id="openStoreButton">OPEN STORE</button>
+                <button id="openStoreButton">Open Store</button>
                 <h1 id="employeeName">EMPLOYEE</h1>
-                <button id="closeStoreButton">CLOSE STORE</button>
+                <button id="closeStoreButton">Close Store</button>
             </div>
 
             <div id="lowerDiv">
@@ -51,12 +52,7 @@
             <h1 id="removeItemText">REMOVE ITEM</h1>
 
             <h3 id="removeItemNameLabel">Item Name:</h3>
-            <select id="removeItemList">
-                <option>Choose item</option>
-                <option>Squidward</option>
-                <option>Spongebob</option>
-                <option>Gary the snail</option>
-            </select>
+            <select id="removeItemList"></select>
 
             <button id="removeItemSave">REMOVE</button>
         </div>
@@ -65,12 +61,7 @@
             <h1 id="editItemText">EDIT ITEM</h1>
 
             <h3 id="selectItemLabel">Select Item:</h3>
-            <select id="editItemList">
-                <option>Choose item</option>
-                <option>Squidward</option>
-                <option>Spongebob</option>
-                <option>Gary the snail</option>
-            </select>
+            <select id="editItemList"></select>
 
             <h3 id="editItemNameLabel">Item Name:</h3>
             <input type="text" id="editItemNameInput">
@@ -92,9 +83,8 @@
 
             <h3 id="selectPositionLabel">Position:</h3>
             <select id="selectPositionList">
-                <option>Choose position</option>
-                <option>Admin</option>
-                <option>Cook</option>
+                <option value="a">Admin</option>
+                <option value="c">Cook</option>
             </select>
 
             <h3 id="addEmployeePasswordLabel">Password:</h3>
@@ -108,9 +98,6 @@
 
             <h3 id="removeSelectEmployeeLabel">Employee Name:</h3>
             <select id="removeEmployeeList">
-                <option>Choose employee</option>
-                <option>Amrit</option>
-                <option>Mark</option>
             </select>
 
             <button id="removeEmployeeSave">REMOVE</button>
@@ -120,11 +107,7 @@
             <h1 id="editEmployeeText">EDIT EMPLOYEE</h1>
 
             <h3 id="editSelectEmployeeLabel">Employee:</h3>
-            <select id="editEmployeeList">
-                <option>Choose employee</option>
-                <option>Amrit</option>
-                <option>Mark</option>
-            </select>
+            <select id="editEmployeeList"></select>
 
             <h3 id="editEmployeeNameLabel">Employee Name:</h3>
             <input type="text" id="editEmployeeNameInput">
@@ -139,6 +122,6 @@
 
         </div>
 
-        <script src='/scripts/admin-page.js'></script>
+        <script src='/scripts/adminbundle.js'></script>
     </body>
 </html>

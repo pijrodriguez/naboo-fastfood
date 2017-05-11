@@ -1,3 +1,10 @@
+/**********************************TESTING*************************************/
+module.exports = {
+    add: function (a, b) {
+        return a + b;
+    }
+};
+
 /**********************************CONSTS & VARS*************************************/
 const NEWPORT = process.env.PORT || 10000;
 
@@ -332,3 +339,7 @@ sv.listen(NEWPORT, function(err){
     }
     console.log(NEWPORT+" is running");
 });
+
+
+
+

@@ -25,25 +25,54 @@ $(document).ready(function(){
         timeOut();
     }
     
+    function staticChangeImg(){
+        document.images.slide.src=eval("img"+curImg+".src");
+        if(curImg<3){
+            curImg ++;
+        }
+        else {
+            curImg = 1;
+        }
+    }
+    
     document.getElementById("orderButton").addEventListener("click",function(){
         location.href ="/order-page";
     })
     document.getElementById("next").addEventListener("click",function(){
+        if (running==1){
         clearTimeout(timeOutS);
         changeImg();
+        }
+        else{
+            staticChangeImg();
+        }
     })
     document.getElementById("previous").addEventListener("click",function(){
-        clearTimeout(timeOutS);
-        if(curImg==1){
-            curImg = 2;
-        }
-        else if(curImg==2){
-            curImg = 3;
+        if (running==1){
+            clearTimeout(timeOutS);
+            if(curImg==1){
+                curImg = 2;
+            }
+            else if(curImg==2){
+                curImg = 3;
+            }
+            else {
+                curImg -= 2;
+            }
+            changeImg();
         }
         else {
-            curImg -= 2;
+            if(curImg==1){
+                curImg = 2;
+            }
+            else if(curImg==2){
+                curImg = 3;
+            }
+            else {
+                curImg -= 2;
+            }
+            staticChangeImg();
         }
-        changeImg();
     })
     document.getElementById("pause").addEventListener("click",function(){
         clearTimeout(timeOutS);
@@ -51,7 +80,7 @@ $(document).ready(function(){
     })
     document.getElementById("play").addEventListener("click",function(){
         if (running == 0){
-        changeImg();
+        timeOut();
         }
     })
     changeImg();

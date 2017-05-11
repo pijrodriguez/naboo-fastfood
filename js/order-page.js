@@ -17,7 +17,12 @@ $(document).ready(function(){
         sDiv = document.getElementById("sDiv"),
         bgDiv = document.getElementById("bgDiv"),
         mbDiv = document.getElementById("mbDiv"),
-        dDiv = document.getElementById("dDiv");
+        dDiv = document.getElementById("dDiv"),
+        
+        cart = document.getElementById("cart"),
+        blankDiv = document.getElementById("blankDiv"),
+        cartSection = document.getElementById("cartSection"),
+        backButton = document.getElementById("backButton");
     
     //Arrays (for different food categories)
     var gArray = [],
@@ -49,6 +54,90 @@ $(document).ready(function(){
         }
     }
     
+    //This function adds a counter to every food item and is called while creating in the ajax calls
+    function counterCreator(parentDiv){
+        var counterDiv = document.createElement("div");
+        counterDiv.className = "counterDiv";
+        parentDiv.appendChild(counterDiv);
+
+        var Plus = document.createElement("img");
+        Plus.className = "Plus";
+        Plus.src = "/pics/plus.png";
+        counterDiv.appendChild(Plus);
+
+        var Counter = document.createElement("div");
+        Counter.className = "Counter";
+        Counter.Id = "counter";
+        Counter.innerHTML = "0";
+        counterDiv.appendChild(Counter);
+
+        var Minus = document.createElement("img");
+        Minus.className = "Minus";
+        Minus.src = "/pics/minus.png";
+        counterDiv.appendChild(Minus);
+
+        Plus.addEventListener("click", function(){
+            var initialValue = parseInt(this.parentNode.childNodes[1].innerHTML);
+            this.parentNode.childNodes[1].innerHTML = initialValue + 1;
+        });
+
+        Minus.addEventListener("click", function(){
+            var initialValue = parseInt(this.parentNode.childNodes[1].innerHTML);
+            if(initialValue != 0){
+                this.parentNode.childNodes[1].innerHTML = initialValue - 1;
+            } else {
+                alert("COUNTER CAN'T GO BELOW 0.");
+            }
+        });
+
+        var add2Cart = document.createElement("button");
+        add2Cart.className = "add2Cart";
+        add2Cart.innerHTML = "Add To Cart";
+        counterDiv.appendChild(add2Cart);
+    }
+    
+    //Storing info into each array
+    //And then into different divs
+    function ajaxCalls(div, array){
+        for(var j=0;array.length>j;j++){
+            var newDiv = document.createElement("div");
+            newDiv.className = "newDiv";
+            div.appendChild(newDiv);
+
+            var newTitle = document.createElement("div");
+            newTitle.innerHTML = array[j].item;
+            newTitle.className = "newTitle";
+            newDiv.appendChild(newTitle);
+
+            var newImg = document.createElement("img");
+            newImg.src = array[j].img;
+            newImg.className = "newImg";
+            newDiv.appendChild(newImg);
+
+            var newPrice = document.createElement("div");
+            newPrice.innerHTML = array[j].price;
+            newPrice.className = "newPrice";
+            newDiv.appendChild(newPrice);
+
+            var newPriceC = document.createElement("div");
+            newPriceC.innerHTML = " IC";
+            newPriceC.className = "newPriceC";
+            newDiv.appendChild(newPriceC);
+
+            //Calling the "counterCreator" function
+            counterCreator(newDiv);
+        }
+    }
+    
+    cart.addEventListener("click", function(){
+        cartSection.style.right = "0";
+        blankDiv.style.left = "0";
+    });
+    backButton.addEventListener("click", function(){
+        cartSection.style.right = "-30%";
+        blankDiv.style.left = "-100%";
+    });
+    
     //This ajax call stores all the food item's information into the divs as the page is loaded
     $.ajax({
         url: "/menu/items",
@@ -77,128 +166,14 @@ $(document).ready(function(){
                         dArray.push(arr[i]);
                     }
                 }
-                //Storing info into each array
-                //And then into different divs
-                for(var j=0;gArray.length>j;j++){
-                    var newDiv = document.createElement("div");
-                    newDiv.className = "newDiv";
-                    gDiv.appendChild(newDiv);
-                    
-                    var newTitle = document.createElement("div");
-                    newTitle.innerHTML = gArray[j].item;
-                    newTitle.className = "newTitle";
-                    newDiv.appendChild(newTitle);
-                    
-                    var newImg = document.createElement("img");
-                    newImg.src = gArray[j].img;
-                    newImg.className = "newImg";
-                    newDiv.appendChild(newImg);
-                    
-                    var newPrice = document.createElement("div");
-                    newPrice.innerHTML = gArray[j].price+" IC";
-                    newPrice.className = "newPrice";
-                    newDiv.appendChild(newPrice);
-                }
-                for(var j=0;mArray.length>j;j++){
-                    var newDiv = document.createElement("div");
-                    newDiv.className = "newDiv";
-                    mDiv.appendChild(newDiv);
-                    
-                    var newTitle = document.createElement("div");
-                    newTitle.innerHTML = mArray[j].item;
-                    newTitle.className = "newTitle";
-                    newDiv.appendChild(newTitle);
-                    
-                    var newImg = document.createElement("img");
-                    newImg.src = mArray[j].img;
-                    newImg.className = "newImg";
-                    newDiv.appendChild(newImg);
-                    
-                    var newPrice = document.createElement("div");
-                    newPrice.innerHTML = mArray[j].price+" IC";
-                    newPrice.className = "newPrice";
-                    newDiv.appendChild(newPrice);
-                }
-                for(var j=0;sArray.length>j;j++){
-                    var newDiv = document.createElement("div");
-                    newDiv.className = "newDiv";
-                    sDiv.appendChild(newDiv);
-                    
-                    var newTitle = document.createElement("div");
-                    newTitle.innerHTML = sArray[j].item;
-                    newTitle.className = "newTitle";
-                    newDiv.appendChild(newTitle);
-                    
-                    var newImg = document.createElement("img");
-                    newImg.src = sArray[j].img;
-                    newImg.className = "newImg";
-                    newDiv.appendChild(newImg);
-                    
-                    var newPrice = document.createElement("div");
-                    newPrice.innerHTML = sArray[j].price+" IC";
-                    newPrice.className = "newPrice";
-                    newDiv.appendChild(newPrice);
-                }
-                for(var j=0;bgArray.length>j;j++){
-                    var newDiv = document.createElement("div");
-                    newDiv.className = "newDiv";
-                    bgDiv.appendChild(newDiv);
-                    
-                    var newTitle = document.createElement("div");
-                    newTitle.innerHTML = bgArray[j].item;
-                    newTitle.className = "newTitle";
-                    newDiv.appendChild(newTitle);
-                    
-                    var newImg = document.createElement("img");
-                    newImg.src = bgArray[j].img;
-                    newImg.className = "newImg";
-                    newDiv.appendChild(newImg);
-                    
-                    var newPrice = document.createElement("div");
-                    newPrice.innerHTML = bgArray[j].price+" IC";
-                    newPrice.className = "newPrice";
-                    newDiv.appendChild(newPrice);
-                }
-                for(var j=0;mbArray.length>j;j++){
-                    var newDiv = document.createElement("div");
-                    newDiv.className = "newDiv";
-                    mbDiv.appendChild(newDiv);
-                    
-                    var newTitle = document.createElement("div");
-                    newTitle.innerHTML = mbArray[j].item;
-                    newTitle.className = "newTitle";
-                    newDiv.appendChild(newTitle);
-                    
-                    var newImg = document.createElement("img");
-                    newImg.src = mbArray[j].img;
-                    newImg.className = "newImg";
-                    newDiv.appendChild(newImg);
-                    
-                    var newPrice = document.createElement("div");
-                    newPrice.innerHTML = mbArray[j].price+" IC";
-                    newPrice.className = "newPrice";
-                    newDiv.appendChild(newPrice);
-                }
-                for(var j=0;dArray.length>j;j++){
-                    var newDiv = document.createElement("div");
-                    newDiv.className = "newDiv";
-                    dDiv.appendChild(newDiv);
-                    
-                    var newTitle = document.createElement("div");
-                    newTitle.innerHTML = dArray[j].item;
-                    newTitle.className = "newTitle";
-                    newDiv.appendChild(newTitle);
-                    
-                    var newImg = document.createElement("img");
-                    newImg.src = dArray[j].img;
-                    newImg.className = "newImg";
-                    newDiv.appendChild(newImg);
-                    
-                    var newPrice = document.createElement("div");
-                    newPrice.innerHTML = dArray[j].price+" IC";
-                    newPrice.className = "newPrice";
-                    newDiv.appendChild(newPrice);
-                }
+                
+                //Calling the "ajaxCalls" function
+                ajaxCalls(gDiv, gArray);
+                ajaxCalls(mDiv, mArray);
+                ajaxCalls(sDiv, sArray);
+                ajaxCalls(bgDiv, bgArray);
+                ajaxCalls(mbDiv, mbArray);
+                ajaxCalls(dDiv, dArray);
             }
         }
     });

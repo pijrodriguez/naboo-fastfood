@@ -34,6 +34,10 @@ $(document).ready(function(){
     
     var items = [greens,meats,seafood,bakedGoods,mollusksBugs,drinks];
     
+    //This is for the shopping cart it stores what the user has bought;
+    var itemPrices = {};
+    var finalItems = {};
+    
     //This Function makes the selected menu "glow/highlighted" when it's selected
     var active;
     function glow(active){
@@ -94,7 +98,86 @@ $(document).ready(function(){
         add2Cart.className = "add2Cart";
         add2Cart.innerHTML = "Add To Cart";
         counterDiv.appendChild(add2Cart);
+        add2Cart.addEventListener("click",function(){
+            var quantity = parseInt(this.parentNode.childNodes[1].innerHTML);
+            var itemName = this.parentNode.parentNode.childNodes[0].innerHTML;
+            var cost = parseInt(this.parentNode.parentNode.childNodes[2].innerHTML);
+            var purchaseItem = document.createElement("div");
+            var list = document.getElementById("ordersList");
+            var exists = false;
+            var itself = this;
+            var currentTotal = document.getElementById("total");
+            if (quantity != 0){
+                for(i=0; i<list.childNodes.length;i++){
+                    if (list.childNodes[i].className==itemName){
+                        exists = true;
+                    }
+                }
+                if (!exists){
+                    this.innerHTML = "update cart";
+                    purchaseItem.className = itemName;
+                currentTotal.innerHTML = (parseInt(currentTotal.innerHTML) + (quantity*cost));
+                purchaseItem.innerHTML = itemName + ": " + quantity + " @ " + cost + "IC each: " + (cost*quantity) + "IC";
+                var removeItem = document.createElement("button");
+                removeItem.innerHTML = "X";
+                removeItem.addEventListener("click",function(){
+                    this.parentNode.remove();
+                    delete finalItems[itemName];
+                    itself.innerHTML = "Add to cart";
+                    itself.parentNode.childNodes[1].innerHTML = 0;
+                    totalCost();
+                })
+                purchaseItem.appendChild(removeItem);
+                list.appendChild(purchaseItem);
+                }
+                else {
+                    for(i=0; i<list.childNodes.length;i++){
+                    if (list.childNodes[i].className==itemName){
+                            list.childNodes[i].innerHTML = itemName + ": " + quantity + " @ " + cost + "IC each: " + (cost*quantity) + "IC";
+                        var removeItem = document.createElement("button");
+                        removeItem.innerHTML = "X";
+                        removeItem.addEventListener("click",function(){
+                            this.parentNode.remove();
+                            delete finalItems[itemName];
+                            itself.innerHTML = "Add to cart";
+                            itself.parentNode.childNodes[1].innerHTML = 0;
+                            totalCost();
+                            })
+                        list.childNodes[i].appendChild(removeItem);
+                        }  
+                    }
+                }
+                finalItems[itemName] =  parseInt(quantity);
+                totalCost();
+            }
+            else {
+                var update = false;
+                for(i=0; i<list.childNodes.length;i++){
+                    if (list.childNodes[i].className==itemName){
+                        list.childNodes[i].remove();
+                        this.innerHTML = "Add to cart";
+                        update = true;
+                        delete finalItems[itemName];
+                        totalCost();
+                    }
+                }
+                if (update == false){
+                alert("Enter amount you would like to order");
+                }
+            }
+        })
     }
+    
+    // this function is to update the total cost of order
+    
+    function totalCost(){
+        var total = 0;
+        Object.keys(finalItems).forEach(function(key){
+            total += itemPrices[key] * finalItems[key];
+        })
+        document.getElementById("total").innerHTML = /*"Total Cost: " +*/ total;
+    }
+    
     
     //Storing info into each array
     //And then into different divs
@@ -123,7 +206,8 @@ $(document).ready(function(){
             newPriceC.innerHTML = " IC";
             newPriceC.className = "newPriceC";
             newDiv.appendChild(newPriceC);
-
+            
+            itemPrices[array[j].item] = parseInt(array[j].price);
             //Calling the "counterCreator" function
             counterCreator(newDiv);
         }
@@ -177,7 +261,36 @@ $(document).ready(function(){
             }
         }
     });
-    
+    document.getElementById("checkout").addEventListener("click",function(){
+        var name = document.getElementById("cusName");
+        if(name.value != "" && (document.getElementById("ordersList").childNodes >0)){
+            $.ajax({
+                url:"/menu/order",
+                type:"post",
+                data:{
+                    order:finalItems,
+                    cusName:name.value
+                },
+                success:function(resp){
+                    if(resp.status == "success"){
+                        alert("Order has been made");
+                        location.href = "/main-page";
+                    }
+                    else {
+                        alert("error making order");
+                    }
+                }
+            })
+        }
+        else {
+            if(name.value == ""){
+            alert("Please enter your name")
+            }
+            else{
+                alert("Your checkout is empty");
+            }
+        }
+    })
     greens.addEventListener("click", function(){
         
         //Calling the glow function for each "on click"

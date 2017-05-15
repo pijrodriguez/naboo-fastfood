@@ -44,6 +44,12 @@ app.use(session({
 }));
 
 var storeIsOpen = true;
+
+/**********************************CURRENT ORDERS************************************/
+
+var orders = {};
+var orderNum = 1;
+
 /**********************************ROOT FOLDERS*************************************/
 app.get("/", function(req, resp){
     resp.sendFile(CLF+"/login-page.html");
@@ -86,6 +92,37 @@ app.post("/menu/items", function(req, resp){
     });
 });
 
+app.post("/menu/order", function(req,resp){
+    if(orderNum < 100){
+        orders[orderNum] = req.body.order;
+        orderNum += 1;
+    }
+    else {
+        orderNum = 1;
+        orders[orderNum] = req.body.order;
+    }
+    console.log(unmakeOrders);
+    console.log(orders);
+    pg.connect(dbURL, function (err, client, done) {
+        if (err) {
+            console.log(err);
+            resp.send({
+            status:"Fail",
+        })
+        }
+        client.query("INSERT INTO orders (cus_name) VALUES ($1)", [req.body.cusName], function(err,result){
+            done();
+            if(err){
+                resp.send({
+                status:"Fail",
+                })
+            }
+            resp.send({
+                status:"success",
+            })
+        })
+    })
+})
 /**********************************KITCHEN*************************************/
 var unmakeOrders = {1:{"Burger":2,"Fish":5,"Saled":2},2:{"Bug":7,"Water":1},3:{"Burger":20,"Fish":5,"Saled":2},4:{"Bug":7,"Water":10},5:{"Burger":2,"Fish":5,"Saled":2},6:{"Bug":7,"Water":1}}
 var binnedItems = {};

@@ -50,7 +50,7 @@ var storeIsOpen = true;
 
 var itemsSold ={};
 
-/**********************************CURRENT ORDERS************************************/
+/*********************************CURRENT ORDERS************************************/
 
 var orders = {};
 var orderNum = 1;

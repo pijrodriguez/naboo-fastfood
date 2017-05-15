@@ -204,7 +204,6 @@ $(document).ready(function(){
         document.getElementById("total").innerHTML = /*"Total Cost: " +*/ total;
     }
     
-    
     //Storing info into each array
     //And then into different divs
     function ajaxCalls(div, array){

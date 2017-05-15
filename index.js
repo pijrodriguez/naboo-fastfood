@@ -263,6 +263,7 @@ app.post("/get-items", function(req, resp){
         })
     })
 })
+
 /**********************************ADD ITEM*************************************/
 app.post("/add-item", function(req, resp){
     if(req.body.type == "create"){
@@ -272,7 +273,7 @@ app.post("/add-item", function(req, resp){
                 return false;
             }
 
-            client.query("INSERT INTO food (item, price) VALUES ($1, $2)", [req.body.item_name, req.body.item_price], function(err,result){
+            client.query("INSERT INTO food (item, price, img, type) VALUES ($1, $2, $3, $4)", [req.body.item_name, req.body.item_price, req.body.item_img, req.body.item_type], function(err,result){
                 done();
                 if(err){
                     return false;
@@ -381,6 +382,27 @@ app.post("/edit-employee", function(req, resp){
             })
         })
     };
+
+    if(req.body.type == "select"){
+        pg.connect(dbURL, function (err, client, done) {
+            if (err) {
+                console.log(err);
+                return false;
+            }
+
+            client.query("SELECT * FROM users WHERE name = $1", [req.body.employee_name], function(err,result){
+                done();
+                if(err){
+                    return false;
+                }
+
+                resp.send({
+                    status: "Success",
+                    user: result.rows
+                });
+            })
+        })
+    }
 });
 
 /**********************************LOGIN*************************************/

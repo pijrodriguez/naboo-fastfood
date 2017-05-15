@@ -1,11 +1,21 @@
 body {
     margin: 0;
+/*
+    background-image: url("http://wonderwordz.com/wp-content/uploads/2014/08/flowers_wonderwordz_18.jpg");
+    background-image: url("http://www.technocrazed.com/wp-content/uploads/2015/12/Wood-Wallpaper-Background-18.jpg");
+    background-size: cover;
+*/
 }
 #menuDiv {
     position: fixed;
-    width: 15%;
-    height: 100%;
-    background-color: lightgreen;
+    width: 12%;
+    height: 80%;
+    left: 2.5%;
+    background: linear-gradient(green, lightgreen);
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    box-shadow: -15px 15px 15px rgba(0,0,0,0.5);
 }
 #greens, #meats, #seafood, #bakedGoods, #mollusksBugs, #drinks {
     position: relative;
@@ -13,15 +23,15 @@ body {
     height: 50px;
     color: white;
     background-color: darkgreen;
-    top: 100px;
-    margin-bottom: 25px;
+    top: 120px;
+    margin-bottom: 15px;
     border: none;
     cursor: pointer;
     text-align: center;
     transition: .15s;
     outline: none;
 }
-#greens:hover, #meats:hover, #seafood:hover, #bakedGoods:hover, #mollusksBugs:hover, #drinks:hover {
+#greens {
     color: black;
     height: 55px;
     background-color: greenyellow;
@@ -36,33 +46,152 @@ body {
 }
 #title {
     position: relative;
+    font-size: 70px;
+    font-family: "your ideal typeface", Verdana, sans-serif;
     color: limegreen;
-    font-family: Impact, Charcoal, sans-serif;
-    font-variant: small-caps;
-    font-size: 100px;
     text-align: center;
+    margin-left: -40px;
     text-shadow: 3px 3px 3px #000, 3px 3px 3px #000;
+    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0.5)));
 }
 #category {
     position: relative;
     top: -20px;
-    color: rgb(210,210,210);
+    color: burlywood;
     font-family: Tahoma, Geneva, sans-serif;
     font-variant: small-caps;
-    font-size: 50px;
+    font-size: 40px;
     text-align: center;
+    margin-left: -40px;
     text-shadow: 3px 3px 3px #000, 3px 3px 3px #000;
+    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.2)), to(rgba(0,0,0,1)));
 }
 #gDiv, #mDiv, #sDiv, #bgDiv, #mbDiv, #dDiv {
     display: inline;
     position: fixed;
     width: 84%;
-    height: 72.5%;
+    height: 78%;
     bottom: 5px;
     right: 0.5%;
-    background-color: lightcoral;
     overflow-y: scroll;
 }
 #mDiv, #sDiv, #bgDiv, #mbDiv, #dDiv{
     display: none;
+}
+.newDiv {
+    position: relative;
+    display: inline-block;
+    width: 45%;
+    height: 90%;
+    top: 15px;
+    left: 3%;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    border-top: 5px solid green;
+}
+.newTitle, .newImg, .newPrice, .newPriceC {
+    position: relative;
+    top: 10px;
+}
+.newTitle {
+    text-align: center;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 20px;
+}
+.newImg {
+    width: 500px;
+    left: 50%;
+    margin-left: -250px;
+    border: 2px solid black;
+}
+.newPrice, .newPriceC {
+    top: 35px;
+    display: inline;
+    text-align: center;
+    font-family: Tahoma, Geneva, sans-serif;
+}
+.newPrice {
+    font-size: 30px;
+}
+.newPriceC {
+    font-size: 25px;
+}
+.Plus, .Minus, .Counter {
+    display: inline;
+    font-size: 25px;
+}
+.Plus, .Minus {
+    width: 20px;
+}
+.Plus {
+    width: 15px;
+}
+#cart {
+    position: absolute;
+    cursor: pointer;
+    width: 55px;
+    top: 3.5%;
+    right: 2%;
+    transition: .2s;
+}
+#cart:hover {
+    width: 65px;
+    right: 1.6%;
+    top: 2.7%;
+}
+#blankDiv {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: -100%;
+    background-color: rgba(0,0,0,0.7);
+}
+#cartSection {
+    position: fixed;
+    height: 100%;
+    width: 30%;
+    right: -30%;
+    background-color: aquamarine;
+    transition: .2s;
+}
+#backButton {
+    position: absolute;
+    width: 50px;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+    transition: .2s;
+}
+#backButton:hover {
+    width: 55px;
+    top: 8px;
+    left: 8px;
+}
+#cartTitle {
+    position: relative;
+    top: 5px;
+    text-align: center;
+    font-family: "your ideal typeface", Verdana, sans-serif;
+    font-size: 50px;
+}
+#ordersList {
+    position: relative;
+    width: 80%;
+    height: 55%;
+    top: 20px;
+    left: 10%;
+    background-color: beige;
+    overflow-y: scroll;
+}
+#cusName, #checkout {
+    position: relative;
+    width: 70%;
+    height: 40px;
+    left: 15%;
+    top: 40px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+#checkout {
+    width: 71%;
 }

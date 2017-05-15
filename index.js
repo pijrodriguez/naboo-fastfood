@@ -1,3 +1,10 @@
+/**********************************TESTING*************************************/
+module.exports = {
+    add: function (a, b) {
+        return a + b;
+    }
+};
+
 /**********************************CONSTS & VARS*************************************/
 const NEWPORT = process.env.PORT || 10000;
 
@@ -19,6 +26,7 @@ io.on("connection", function(socket){
 });
 
 var dbURL = process.env.DATABASE_URL || "postgres://postgres:PASSWORD@localhost:5432/naboo";
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -36,6 +44,12 @@ app.use(session({
 }));
 
 var storeIsOpen = true;
+
+/**********************************CURRENT ORDERS************************************/
+
+var orders = {};
+var orderNum = 1;
+
 /**********************************ROOT FOLDERS*************************************/
 app.get("/", function(req, resp){
     resp.sendFile(CLF+"/login-page.html");
@@ -78,16 +92,51 @@ app.post("/menu/items", function(req, resp){
     });
 });
 
-/**********************************Kitchen*************************************/
-var unmakeOrders = [];
-var cookedOrders = [];
-app.post("/removeTheFirstItem", function(req, resp){
-    if(req.body.status == "remove"){
-        cookedOrders.add(unmakeOrders[0]);
-        unmakeOrders.shift();
+app.post("/menu/order", function(req,resp){
+    if(orderNum < 100){
+        orders[orderNum] = req.body.order;
+        orderNum += 1;
+    }
+    else {
+        orderNum = 1;
+        orders[orderNum] = req.body.order;
+    }
+    console.log(unmakeOrders);
+    console.log(orders);
+    pg.connect(dbURL, function (err, client, done) {
+        if (err) {
+            console.log(err);
+            resp.send({
+            status:"Fail",
+        })
+        }
+        client.query("INSERT INTO orders (cus_name) VALUES ($1)", [req.body.cusName], function(err,result){
+            done();
+            if(err){
+                resp.send({
+                status:"Fail",
+                })
+            }
+            resp.send({
+                status:"success",
+            })
+        })
+    })
+})
+/**********************************KITCHEN*************************************/
+var unmakeOrders = {1:{"Burger":2,"Fish":5,"Saled":2},2:{"Bug":7,"Water":1},3:{"Burger":20,"Fish":5,"Saled":2},4:{"Bug":7,"Water":10},5:{"Burger":2,"Fish":5,"Saled":2},6:{"Bug":7,"Water":1}}
+var binnedItems = {};
+var prepItems = {1:"Fish"};
+app.post("/updateUnmake", function(req, resp){
+
+    if(req.body.status == "served"){
+        console.log(unmakeOrders[req.body.key1][req.body.key2]);
+        console.log(req.body.numOfFood);
+        unmakeOrders[req.body.key1][req.body.key2]= req.body.numOfFood;
+        console.log(unmakeOrders[req.body.key1][req.body.key2]);
+
         resp.send({
             status:"success",
-            unmakeOrders:unmakeOrders
         })
     }
 });
@@ -99,6 +148,53 @@ app.post("/checkUnmakeOrder", function(req, resp){
         })
     }
 });
+app.post("/updatePrep", function(req, resp){
+    if(req.body.status == "served"){
+        var keyOfServedFood =[]
+        var prepItemskeys = Object.keys(prepItems);
+        for(var i =0;i<prepItemskeys.length;i++){
+            if(prepItems[prepItemskeys[i]] === req.body.food){
+                keyOfServedFood.push(prepItemskeys[i]);
+            }
+        }
+        keyOfServedFood.sort();
+        for (var i=0; i<req.body.numToRemove;i++){
+            binnedItems[keyOfServedFood[0]]=req.body.food;
+            delete prepItems[keyOfServedFood[0]];
+            keyOfServedFood.shift();
+        }
+        resp.send({
+            status:"success",
+            prepItems:prepItems
+        })
+    }
+});
+
+app.post("/checkPrep", function(req, resp){
+    if(req.body.status == "check"){
+        resp.send({
+            status:"success",
+            prepItems:prepItems
+        })
+    }
+});
+
+app.post("/madeFood", function(req, resp){
+    if(req.body.status == "make"){
+        var making = [];
+        for(var i = 0; i<req.body.quantity;i++) {
+            var time = Date.now() + i;
+            prepItems[time] = req.body.foodName;
+            making.push(time);
+        }
+        resp.send({
+            status:"success",
+            qtymade:req.body.quantity,
+            making:making
+        })
+    }
+});
+
 
 /**********************************OPEN/CLOSE STORE*************************************/
 //OPEN STORE
@@ -332,3 +428,7 @@ sv.listen(NEWPORT, function(err){
     }
     console.log(NEWPORT+" is running");
 });
+
+
+
+

@@ -1,0 +1,88 @@
+body {
+    margin: 0;
+}
+#bar {
+    position: relative;
+    width: 100%;
+    height: 10vh;
+    background: linear-gradient(lightgreen, green);
+    border-bottom: 3px solid black;
+}
+#title {
+    position: relative;
+    top: 15%;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 35px;
+    text-align: center;
+    color: white;
+}
+#display {
+    width: 100%;
+    height: 85vh;
+}
+#logo {
+    position: absolute;
+    width: 400px;
+    left: 10%;
+    top: 20%;
+}
+#container {
+    position: absolute;
+    width: 50%;
+    top: 25%;
+    right: 0;
+}
+#empId, #passWord {
+    position: relative;
+    display: block;
+    width: 500px;
+    height: 50px;
+    left: 10%;
+    margin-bottom: 15px;
+    text-align: center;
+    color: green;
+    border: none;
+    border-bottom: solid 1px green;
+    border-radius: 5px 35px 0 0;
+    transition: box-shadow 0.3s, border 0.3s;
+    outline: none;
+}
+#passWord {
+    margin-bottom: 50px;
+}
+#empId:focus, #passWord:focus {
+    box-shadow: 0 0 35px 1px limegreen;
+}
+#loginButton {
+    position: relative;
+    display: block;
+    width: 250px;
+    height: 50px;
+    left: 28.1%;
+    color: green;
+    border: none;
+    border-radius: 30px;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 15px;
+    background: linear-gradient(rgba(0,255,0,.4), rgba(0,0,0,0));
+    cursor: pointer;
+    outline: none;
+    transition: .1s;
+}
+#loginButton:hover {
+    background: linear-gradient(rgba(0,255,0,.6), rgba(0,0,0,0));
+    border-top: .5px solid green;
+    font-size: 20px;
+}
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: limegreen;
+}
+::-moz-placeholder { /* Firefox 19+ */
+    color: limegreen;
+}
+:-ms-input-placeholder { /* IE 10+ */
+    color: limegreen;
+}
+:-moz-placeholder { /* Firefox 18- */
+    color: limegreen;
+}

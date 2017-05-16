@@ -12,12 +12,16 @@ var addItemButton = document.getElementById("addItemButton"),
     editEmployeeDiv = document.getElementById("editEmployeeDiv"),
     addItemNameInput = document.getElementById("addItemNameInput"),
     addItemPriceInput = document.getElementById("addItemPriceInput"),
+    addItemImgInput = document.getElementById("addItemImgInput"),
+    selectItemTypeList = document.getElementById("selectItemTypeList"),
     addItemSave = document.getElementById("addItemSave"),
     removeItemList = document.getElementById("removeItemList"),
     removeItemSave = document.getElementById("removeItemSave"),
     editItemList = document.getElementById("editItemList"),
     editItemNameInput = document.getElementById("editItemNameInput"),
     editItemPriceInput = document.getElementById("editItemPriceInput"),
+    editItemImgInput = document.getElementById("editItemImgInput"),
+    editItemTypeList = document.getElementById("editItemTypeList"),
     editItemSave = document.getElementById("editItemSave"),
     addEmployeeNameInput = document.getElementById("addEmployeeNameInput"),
     addEmployeeIdInput = document.getElementById("addEmployeeIdInput"),
@@ -29,10 +33,10 @@ var addItemButton = document.getElementById("addItemButton"),
     editEmployeeList = document.getElementById("editEmployeeList"),
     editEmployeeNameInput = document.getElementById("editEmployeeNameInput"),
     editEmployeeIdInput = document.getElementById("editEmployeeIdInput"),
+    editEmployeePositionList = document.getElementById("editEmployeePositionList"),
     editEmployeePasswordInput = document.getElementById("editEmployeePasswordInput"),
     editEmployeeSave = document.getElementById("editEmployeeSave"),
     openStoreButton = document.getElementById("openStoreButton"),
-    closeStoreButton = document.getElementById("closeStoreButton"),
     closeStoreButton = document.getElementById("closeStoreButton"),
     employeeName = document.getElementById("employeeName"),
     employeeId = document.getElementById("employeeId"),
@@ -98,6 +102,16 @@ editItemButton.addEventListener("click", function(){
         success:function(resp){
             if(resp.status == "Success"){
                 var foodItems = JSON.parse(resp.items);
+
+                var chooseItem = document.createElement("option");
+                chooseItem.value = "choose";
+                chooseItem.textContent = "Choose item";
+                editItemList.appendChild(chooseItem);
+
+                editItemNameInput.value = "";
+                editItemPriceInput.value = "";
+                editItemImgInput.value = "";
+                editItemTypeList.value = "";
 
                 for(i=0;i<foodItems.length;i++){
                     var food = document.createElement("option");
@@ -170,6 +184,15 @@ editEmployeeButton.addEventListener("click", function(){
                 console.log(resp.users);
                 var employees = JSON.parse(resp.users);
 
+                var chooseEmployee = document.createElement("option");
+                chooseEmployee.value = "choose";
+                chooseEmployee.textContent = "Choose employee";
+                editEmployeeList.appendChild(chooseEmployee);
+
+                editEmployeeNameInput.value = "";
+                editEmployeeIdInput.value = "";
+                editEmployeePasswordInput.value = "";
+
                 for(i=0;i<employees.length;i++){
                     var employeeName = document.createElement("option");
                     employeeName.value = employees[i].name;
@@ -195,8 +218,7 @@ $(document).ready(function(){
                 var admin = JSON.parse(resp.user);
 
                 //change values for employeeName and employeeId
-                employeeName.innerHTML = admin.name.toUpperCase();
-                employeeId.innerHTML = admin.emp_id;
+                employeeName.innerHTML = "Signed in as " + admin.name.toUpperCase();
             }
         }
     })
@@ -205,7 +227,6 @@ $(document).ready(function(){
 
 
 //**************************ADD ITEM******************************//
-//TODO [Patrick] : Add item settings still needs an image input (URL or File Upload)
 
 addItemSave.addEventListener("click", function(){
     $.ajax({
@@ -214,10 +235,17 @@ addItemSave.addEventListener("click", function(){
         data:{
             item_name: addItemNameInput.value,
             item_price: addItemPriceInput.value,
+            item_img: addItemImgInput.value,
+            item_type: selectItemTypeList.value,
             type: "create"
         },
         success:function(resp){
             console.log(resp);
+            addItemNameInput.value = "";
+            addItemPriceInput.value = "";
+            addItemImgInput.value = "";
+            selectItemTypeList.value = "greens"
+            $("#addItemSuccess").show().delay(3000).fadeOut();
         }
     })
 });
@@ -225,6 +253,7 @@ addItemSave.addEventListener("click", function(){
 //**************************REMOVE ITEM******************************//
 
 removeItemSave.addEventListener("click", function(){
+
     $.ajax({
         url:"/remove-item",
         type:"post",
@@ -234,13 +263,44 @@ removeItemSave.addEventListener("click", function(){
         },
         success:function(resp){
             console.log(resp);
+            removeItemList.remove(removeItemList.selectedIndex);
+            $('#removeItemModal').hide();
+            $('.modal-backdrop').hide();
+            $("#removeItemSuccess").show().delay(3000).fadeOut();
         }
     })
 });
 
 //**************************EDIT ITEM******************************//
-//TODO [Patrick] : Edit item settings still needs an image input (URL or File Upload)
-//TODO [Patrick] : Ajax to the server when user selects from the ddl and put corresponding values in each of the inputs
+
+editItemList.addEventListener("change", function () {
+    $.ajax({
+        url:"/edit-item",
+        type:"post",
+        data:{
+            item_name: editItemList.value,
+            type: "select"
+        },
+        success:function(resp){
+            console.log(resp);
+            if(resp.status == "Success"){
+                var item = resp.food[0];
+
+                if(editItemList.value == "choose"){
+                    editItemNameInput.value = "";
+                    editItemPriceInput.value = "";
+                    editItemImgInput.value = "";
+                    editItemTypeList.value = "";
+                }
+
+                editItemNameInput.value = item.item;
+                editItemPriceInput.value = item.price;
+                editItemImgInput.value = item.img;
+                editItemTypeList.value = item.type;
+            }
+        }
+    })
+});
 
 editItemSave.addEventListener("click", function(){
     $.ajax({
@@ -250,10 +310,17 @@ editItemSave.addEventListener("click", function(){
             old_item_name: editItemList.value,
             new_item_name: editItemNameInput.value,
             item_price: editItemPriceInput.value,
+            item_img: editItemImgInput.value,
+            item_type: editItemTypeList.value,
             type: "edit"
         },
         success:function(resp){
             console.log(resp);
+            $("#editItemSuccess").show().delay(3000).fadeOut();
+            editItemList.value = "choose"
+            editItemNameInput.value = "";
+            editItemPriceInput.value = "";
+            editItemImgInput.value = "";
         }
     })
 });
@@ -273,6 +340,10 @@ addEmployeeSave.addEventListener("click", function(){
         },
         success:function(resp){
             console.log(resp);
+            addEmployeeNameInput.value = "";
+            addEmployeeIdInput.value = "";
+            addEmployeePasswordInput.value = "";
+            $("#addEmployeeSuccess").show().delay(3000).fadeOut();
         }
     })
 });
@@ -289,12 +360,44 @@ removeEmployeeSave.addEventListener("click", function(){
         },
         success:function(resp){
             console.log(resp);
+            removeEmployeeList.remove(removeEmployeeList.selectedIndex);
+            $('#removeEmployeeModal').hide();
+            $('.modal-backdrop').hide();
+            $("#removeEmployeeSuccess").show().delay(3000).fadeOut();
         }
     })
 });
 
 //**************************EDIT EMPLOYEE******************************//
-//TODO [Patrick] : Ajax to the server when user selects from the ddl and put corresponding values in each of the inputs
+
+editEmployeeList.addEventListener("change", function () {
+    $.ajax({
+        url:"/edit-employee",
+        type:"post",
+        data:{
+            employee_name: editEmployeeList.value,
+            type: "select"
+        },
+        success:function(resp){
+            console.log(resp);
+            if(resp.status == "Success"){
+                var employee = resp.user[0];
+
+                if(editEmployeeList.value == "choose"){
+                    editEmployeeNameInput.value = "";
+                    editEmployeeIdInput.value = "";
+                    editEmployeePasswordInput.value = "";
+                }
+
+                editEmployeeNameInput.value = employee.name;
+                editEmployeeIdInput.value = employee.emp_id;
+                editEmployeePositionList.value = employee.type;
+                editEmployeePasswordInput.value = employee.password;
+
+            }
+        }
+    })
+});
 
 editEmployeeSave.addEventListener("click", function(){
     $.ajax({
@@ -304,11 +407,17 @@ editEmployeeSave.addEventListener("click", function(){
             old_employee_name: editEmployeeList.value,
             new_employee_name: editEmployeeNameInput.value,
             employee_id: editEmployeeIdInput.value,
-            password: editEmployeePasswordInput.value,
+            emp_pos: editEmployeePositionList.value,
+            pass: editEmployeePasswordInput.value,
             type: "edit"
         },
         success:function(resp){
             console.log(resp);
+            $("#editEmployeeSuccess").show().delay(3000).fadeOut();
+            editEmployeeList.value = "choose"
+            editEmployeeNameInput.value = "";
+            editEmployeeIdInput.value = "";
+            editEmployeePasswordInput.value = "";
         }
     })
 });

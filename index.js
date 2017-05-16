@@ -26,6 +26,7 @@ io.on("connection", function(socket){
 });
 
 var dbURL = process.env.DATABASE_URL || "postgres://postgres:PASSWORD@localhost:5432/naboo";
+
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -43,12 +44,28 @@ app.use(session({
 }));
 
 var storeIsOpen = true;
+
+
+/**********************************TOTAL ORDERS************************************/
+
+var itemsSold ={};
+
+/*********************************CURRENT ORDERS************************************/
+var maxOrders = 10;
+var orders = {};
+var orderNum = 1;
+var dayTotal = 0;
+
 /**********************************ROOT FOLDERS*************************************/
 app.get("/", function(req, resp){
     resp.sendFile(CLF+"/login-page.html");
 });
 app.get("/kitchen-page", function(req, resp){
-    resp.sendFile(CLF+"/kitchen-page.html");
+    if(req.session.user){
+        resp.sendFile(CLF+"/kitchen-page.html");
+    } else {
+        resp.sendFile(CLF+"/login-page.html");
+    }
 });
 app.get("/admin-page", function(req, resp){
     if(req.session.user){
@@ -85,16 +102,62 @@ app.post("/menu/items", function(req, resp){
     });
 });
 
-/**********************************Kitchen*************************************/
-var unmakeOrders = [];
-var cookedOrders = [];
-app.post("/removeTheFirstItem", function(req, resp){
-    if(req.body.status == "remove"){
-        cookedOrders.add(unmakeOrders[0]);
-        unmakeOrders.shift();
+app.post("/menu/order", function(req,resp){
+    if (Object.keys(orders).length < 10){
+        if(orderNum < maxOrders + 1){
+            orders[orderNum] = req.body.order;
+            orderNum += 1;
+        }
+        else {
+            orderNum = 1;
+            orders[orderNum] = req.body.order;
+        }
+        Object.keys(req.body.order).forEach(function(key){
+            itemsSold[key] += key;
+        })
+        dayTotal += parseInt(req.body.totalCost);
+        console.log(dayTotal);
+        console.log(orders);
+        pg.connect(dbURL, function (err, client, done) {
+            if (err) {
+                console.log(err);
+                resp.send({
+                status:"Fail",
+            })
+            }
+            client.query("INSERT INTO orders (cus_name, totalPrice) VALUES ($1,$2)", [req.body.cusName, req.body.totalCost], function(err,result) {
+                done();
+                if(err){
+                    resp.send({
+                    status:"Fail"
+                    })
+                }
+                resp.send({
+                    status:"success"
+                })
+            })
+        })
+    }
+    else {
+        resp.send({
+            status:"Full"
+        })
+    }
+})
+/**********************************KITCHEN*************************************/
+var unmakeOrders = {1:{"Burger":2,"Fish":5,"Saled":2},2:{"Bug":7,"Water":1},3:{"Burger":20,"Fish":5,"Saled":2},4:{"Bug":7,"Water":10},5:{"Burger":2,"Fish":5,"Saled":2},6:{"Bug":7,"Water":1}}
+var binnedItems = {};
+var prepItems = {1:"Fish"};
+app.post("/updateUnmake", function(req, resp){
+
+    if(req.body.status == "served"){
+        console.log(unmakeOrders[req.body.key1][req.body.key2]);
+        console.log(req.body.numOfFood);
+        unmakeOrders[req.body.key1][req.body.key2]= req.body.numOfFood;
+        console.log(unmakeOrders[req.body.key1][req.body.key2]);
+
         resp.send({
             status:"success",
-            unmakeOrders:unmakeOrders
         })
     }
 });
@@ -106,6 +169,53 @@ app.post("/checkUnmakeOrder", function(req, resp){
         })
     }
 });
+app.post("/updatePrep", function(req, resp){
+    if(req.body.status == "served"){
+        var keyOfServedFood =[]
+        var prepItemskeys = Object.keys(prepItems);
+        for(var i =0;i<prepItemskeys.length;i++){
+            if(prepItems[prepItemskeys[i]] === req.body.food){
+                keyOfServedFood.push(prepItemskeys[i]);
+            }
+        }
+        keyOfServedFood.sort();
+        for (var i=0; i<req.body.numToRemove;i++){
+            binnedItems[keyOfServedFood[0]]=req.body.food;
+            delete prepItems[keyOfServedFood[0]];
+            keyOfServedFood.shift();
+        }
+        resp.send({
+            status:"success",
+            prepItems:prepItems
+        })
+    }
+});
+
+app.post("/checkPrep", function(req, resp){
+    if(req.body.status == "check"){
+        resp.send({
+            status:"success",
+            prepItems:prepItems
+        })
+    }
+});
+
+app.post("/madeFood", function(req, resp){
+    if(req.body.status == "make"){
+        var making = [];
+        for(var i = 0; i<req.body.quantity;i++) {
+            var time = Date.now() + i;
+            prepItems[time] = req.body.foodName;
+            making.push(time);
+        }
+        resp.send({
+            status:"success",
+            qtymade:req.body.quantity,
+            making:making
+        })
+    }
+});
+
 
 /**********************************OPEN/CLOSE STORE*************************************/
 //OPEN STORE
@@ -174,6 +284,7 @@ app.post("/get-items", function(req, resp){
         })
     })
 })
+
 /**********************************ADD ITEM*************************************/
 app.post("/add-item", function(req, resp){
     if(req.body.type == "create"){
@@ -183,9 +294,10 @@ app.post("/add-item", function(req, resp){
                 return false;
             }
 
-            client.query("INSERT INTO food (item, price) VALUES ($1, $2)", [req.body.item_name, req.body.item_price], function(err,result){
+            client.query("INSERT INTO food (item, price, img, type) VALUES ($1, $2, $3, $4)", [req.body.item_name, req.body.item_price, req.body.item_img, req.body.item_type], function(err,result){
                 done();
                 if(err){
+                    console.log(err)
                     return false;
                 }
                 resp.end("Item Added!");
@@ -223,7 +335,7 @@ app.post("/edit-item", function(req, resp){
                 return false;
             }
 
-            client.query("UPDATE food SET item = $1, price = $2 WHERE item = $3", [req.body.new_item_name, req.body.item_price, req.body.old_item_name], function(err,result){
+            client.query("UPDATE food SET item = $1, price = $2, img = $3, type = $4 WHERE item = $5", [req.body.new_item_name, req.body.item_price, req.body.item_img, req.body.item_type, req.body.old_item_name], function(err,result){
                 done();
                 if(err){
                     return false;
@@ -232,7 +344,29 @@ app.post("/edit-item", function(req, resp){
             })
         })
     };
+
+    if(req.body.type == "select"){
+        pg.connect(dbURL, function (err, client, done) {
+            if (err) {
+                console.log(err);
+                return false;
+            }
+
+            client.query("SELECT * FROM food WHERE item = $1", [req.body.item_name], function(err,result){
+                done();
+                if(err){
+                    return false;
+                }
+
+                resp.send({
+                    status: "Success",
+                    food: result.rows
+                });
+            })
+        })
+    }
 });
+
 
 /**********************************ADD EMPLOYEE*************************************/
 app.post("/add-employee", function(req, resp){
@@ -283,7 +417,7 @@ app.post("/edit-employee", function(req, resp){
                 return false;
             }
 
-            client.query("UPDATE users SET emp_id = $1, name = $2, password = $3 WHERE name = $4", [req.body.employee_id, req.body.new_employee_name, req.body.password, req.body.old_employee_name], function(err,result){
+            client.query("UPDATE users SET emp_id = $1, name = $2, type = $3, password = $4 WHERE name = $5", [req.body.employee_id, req.body.new_employee_name, req.body.emp_pos, req.body.pass, req.body.old_employee_name], function(err,result){
                 done();
                 if(err){
                     return false;
@@ -292,6 +426,27 @@ app.post("/edit-employee", function(req, resp){
             })
         })
     };
+
+    if(req.body.type == "select"){
+        pg.connect(dbURL, function (err, client, done) {
+            if (err) {
+                console.log(err);
+                return false;
+            }
+
+            client.query("SELECT * FROM users WHERE name = $1", [req.body.employee_name], function(err,result){
+                done();
+                if(err){
+                    return false;
+                }
+
+                resp.send({
+                    status: "Success",
+                    user: result.rows
+                });
+            })
+        })
+    }
 });
 
 /**********************************LOGIN*************************************/
@@ -339,7 +494,3 @@ sv.listen(NEWPORT, function(err){
     }
     console.log(NEWPORT+" is running");
 });
-
-
-
-

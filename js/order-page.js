@@ -38,6 +38,7 @@ $(document).ready(function(){
     var itemPrices = {};
     var finalItems = {};
     var maxItems = 10;
+    var maxPerItem = 6;
     
     //This Function makes the selected menu "glow/highlighted" when it's selected
     var active;
@@ -79,7 +80,7 @@ $(document).ready(function(){
 
         Plus.addEventListener("click", function(){
             var initialValue = parseInt(this.parentNode.childNodes[1].innerHTML);
-            if(initialValue != 6){
+            if(initialValue != maxPerItem){
                 this.parentNode.childNodes[1].innerHTML = initialValue + 1;
             }
             else {
@@ -148,7 +149,7 @@ $(document).ready(function(){
                 else {
                     var quantChange = 0;
                     quantChange = quantity - finalItems[itemName];
-                    if((currentTotalItems + quantChange) > 10){
+                    if((currentTotalItems + quantChange) > maxItems){
                         alert("TOO MANY ITEMS YOU MAY ONLY ORDER " + (10-currentTotalItems) + " MORE")
                     }
                     else{
@@ -244,6 +245,7 @@ $(document).ready(function(){
     });
     
     //This ajax call stores all the food item's information into the divs as the page is loaded
+
     $.ajax({
         url: "/menu/items",
         type: "post",
@@ -282,11 +284,12 @@ $(document).ready(function(){
             }
         }
     });
+    var regExS = /^[a-z ,.'-]{2,25}$/i
     document.getElementById("checkout").addEventListener("click",function(){
         var name = document.getElementById("cusName");
         var totalCost = parseInt(document.getElementById("total").innerHTML);
         console.log(totalCost);
-        if(name.value != "" && (document.getElementById("ordersList").childNodes.length >0)){
+        if(regExS.test(name.value) == true && (document.getElementById("ordersList").childNodes.length >0)){
             $.ajax({
                 url:"/menu/order",
                 type:"post",
@@ -300,6 +303,9 @@ $(document).ready(function(){
                         alert("Order has been made");
                         location.href = "/main-page";
                     }
+                    else if (resp.status == "Full"){
+                        alert("TOO MANY ORDERS CURRENTLY PLEASE WAIT AND TRY AGAIN");
+                    }
                     else {
                         alert("error making order");
                     }
@@ -307,8 +313,8 @@ $(document).ready(function(){
             })
         }
         else {
-            if(name.value == ""){
-            alert("Please enter your name")
+            if(regExS.test(name.value) != true){
+            alert("Please enter a name between 2 and 25 characters");
             }
             else{
                 alert("Your checkout is empty");

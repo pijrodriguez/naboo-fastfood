@@ -125,7 +125,7 @@ app.post("/menu/order", function(req,resp){
                 status:"Fail",
             })
             }
-            client.query("INSERT INTO orders (cus_name) VALUES ($1)", [req.body.cusName], function(err,result){
+            client.query("INSERT INTO orders (cus_name, totalPrice) VALUES ($1,$2)", [req.body.cusName, req.body.totalCost], function(err,result) {
                 done();
                 if(err){
                     resp.send({

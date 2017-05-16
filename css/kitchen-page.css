@@ -1,17 +1,32 @@
+#showOption{
+    position: fixed;
+    bottom: 25px;
+    width: 30vw;
+}
+
+.showCata{
+    display: inline-block;
+    float: left;
+    margin:0 0 0 0;
+}
+
 #showMaking{
     position: fixed;
     bottom: 0;
     height: auto;
     width: 95vw;
 }
+
 .itemsInMaking{
     display: inline-block;
     height:auto;
     width:10vw;
 }
+
 #make{
     margin: 0 5vw 0 0;
 }
+
 #making{
     position: absolute;
     top:0;
@@ -20,6 +35,7 @@
     height:100vh;
     z-index: -99;
 }
+
 #alterMaking{
     width: 95vw;
     height: auto;
@@ -27,6 +43,21 @@
     /*display: inline-block;*/
 }
 #serveItem{
-    width:20vw;
+    width:30vw;
     height: auto;
+}
+
+#prepBut{
+    display: block;
+    margin: 10px auto 10px 5px;
+    width:200px;
+    height:30px;
+}
+
+#binBut{
+    display: block;
+    margin: 10px auto 10px 5px;
+    width:200px;
+    height:30px;
+
 }

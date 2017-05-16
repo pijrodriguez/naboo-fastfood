@@ -3,6 +3,7 @@
  */
 
 var prepItems = {};
+var foodItems = [];
 checkPrep();
 
 $(document).ready(function () {
@@ -12,6 +13,7 @@ $(document).ready(function () {
         data:{status:"checkFood"},
         success:function (resp) {
             for(var i=0; i<resp.food.length;i++){
+                foodItems.push(resp.food[i].item);
                 var option = document.createElement("option");
                 option.text =resp.food[i].item;
                 option.value=resp.food[i].item;
@@ -28,14 +30,29 @@ $(document).ready(function () {
         },
         success: function (resp) {
             if (resp.status === "success"){
+                if(resp.displayStuff == "allunmake"){
+                    if (Object.keys(resp.unmakeOrders).length==0){
+                        var noOrder = document.createElement("div");
+                        noOrder.innerHTML = "No order..."+"<br>";
+                        noOrder.style.fontSize = "50px";
 
-                if (Object.keys(resp.unmakeOrders).length==0){
-                    document.body.innerHTML = "No order...";
-                }else {
-                    showOrders(resp.unmakeOrders);
+                        document.body.appendChild(noOrder);
+                        document.getElementById("serve").style.display = "none";
+                    }else {
+                        showOrders(resp.unmakeOrders);
+                    }
+
                 }
 
+                if(resp.displayStuff == "allPrep"){
+                    showPrep();
+                    document.getElementById("showMaking").style.display = "none";
+                }
 
+                if (resp.displayStuff == "allWasted"){
+                    showBin();
+                    document.getElementById("showMaking").style.display = "none";
+                }
             }
 
         }
@@ -213,6 +230,54 @@ document.getElementById("serve").addEventListener("click", function () {
 
 })
 
+document.getElementById("allunmake").addEventListener("click", function () {
+    $.ajax({
+        url:"/setType",
+        type:"post",
+        data:{
+            status:"set",
+            displayStuff:"allunmake"
+
+        },
+        success: function (resp) {
+
+        }
+    });
+    location.reload();
+});
+
+document.getElementById("allPrep").addEventListener("click", function () {
+    $.ajax({
+        url:"/setType",
+        type:"post",
+        data:{
+            status:"set",
+            displayStuff:"allPrep"
+
+        },
+        success: function (resp) {
+
+        }
+    });
+    location.reload();
+});
+
+document.getElementById("allWasted").addEventListener("click", function () {
+    $.ajax({
+        url:"/setType",
+        type:"post",
+        data:{
+            status:"set",
+            displayStuff:"allWasted"
+
+        },
+        success: function (resp) {
+
+        }
+    });
+    location.reload();
+});
+
 function updateUnmake(numOfFood,key1,key2) {
     $.ajax({
         url:"/updateUnmake",
@@ -273,7 +338,6 @@ function caculatePreparedItem(food) {
             foodQty++;
         }
     });
-    console.log(foodQty);
     return foodQty;
 
 }
@@ -287,7 +351,6 @@ setInterval(function() {
 
     times.forEach(function(time) {
         if(Date.now()-time>=300000) {
-            // updataBin(time,prepItems[time]);
             updatePrep(1,prepItems[time]);
         }
     });
@@ -295,3 +358,58 @@ setInterval(function() {
 
 }, 30000);
 
+function showBin(){
+    $.ajax({
+        url: "/checkBin",
+        type: "post",
+        data:{
+            status:"check"
+        },
+        success:function (resp) {
+            for (var i=0;i<foodItems.length;i++){
+                var foodQty =0;
+                var foodName =foodItems[i];
+                var keys = Object.keys(resp.binnedItems);
+                keys.forEach(function (key) {
+                    if(resp.binnedItems[key] == foodName){
+                        foodQty++;
+                    }
+                });
+
+                var anItem = document.createElement("div");
+                anItem.innerHTML = foodName+" : "+ foodQty +"<br>";
+
+                document.body.appendChild(anItem);
+            }
+        }
+    })
+
+}
+
+function showPrep() {
+    $.ajax({
+        url: "/checkPrep",
+        type: "post",
+        data:{
+            status:"check"
+        },
+        success:function (resp) {
+            for (var i=0;i<foodItems.length;i++){
+                var foodQty =0;
+                var foodName =foodItems[i];
+                var keys = Object.keys(resp.prepItems);
+                keys.forEach(function (key) {
+                    if(resp.prepItems[key] == foodName){
+                        foodQty++;
+                    }
+                });
+
+                var anItem = document.createElement("div");
+                anItem.innerHTML = foodName+" : "+ foodQty +"<br>";
+
+                document.body.appendChild(anItem);
+            }
+        }
+    })
+
+}

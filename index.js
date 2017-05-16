@@ -139,15 +139,14 @@ app.post("/menu/order", function(req,resp){
 })
 
 /**********************************KITCHEN*************************************/
-var unmakeOrders = {};
-
 var binnedItems = {};
 var prepItems = {};
+var displayStuff = "allunmake";
 app.post("/updateUnmake", function(req, resp){
 
     if(req.body.status == "served"){
 
-        unmakeOrders[req.body.key1][req.body.key2]= req.body.numOfFood;
+        orders[req.body.key1][req.body.key2]= req.body.numOfFood;
 
 
         resp.send({
@@ -157,24 +156,27 @@ app.post("/updateUnmake", function(req, resp){
 });
 app.post("/checkUnmakeOrder", function(req, resp){
 
-    var unmakes = eval(unmakeOrders);
+    var unmakes = eval(orders);
     for (orderNO in unmakes){
         var isEmptyOrder = true;
-        var anOrder = eval(unmakeOrders[orderNO]);
+        var anOrder = eval(orders[orderNO]);
         for (itemId in anOrder){
-            if(unmakeOrders[orderNO][itemId] !=0){
+            if(orders[orderNO][itemId] !=0){
                 isEmptyOrder=false;
             }
         }
         if(isEmptyOrder != false){
-            delete unmakeOrders[orderNO];
+            delete orders[orderNO];
         };
     }
 
     if(req.body.status == "check"){
         resp.send({
             status:"success",
-            unmakeOrders:unmakeOrders
+            unmakeOrders:orders,
+            prepItems:prepItems,
+            binnedItems:binnedItems,
+            displayStuff:displayStuff
         })
     }
 });
@@ -248,6 +250,21 @@ app.post("/checkFoodItem", function (req, resp) {
     }
 
 })
+
+app.post("/setType", function (req, resp) {
+    if(req.body.status == "set"){
+        displayStuff = req.body.displayStuff
+    }
+})
+
+app.post("/checkBin", function(req, resp){
+    if(req.body.status == "check"){
+        resp.send({
+            status:"success",
+            binnedItems:binnedItems
+        })
+    }
+});
 
 /**********************************OPEN/CLOSE STORE*************************************/
 //OPEN STORE

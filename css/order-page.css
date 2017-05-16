@@ -1,17 +1,26 @@
 body {
     margin: 0;
-/*
-    background-image: url("http://wonderwordz.com/wp-content/uploads/2014/08/flowers_wonderwordz_18.jpg");
-    background-image: url("http://www.technocrazed.com/wp-content/uploads/2015/12/Wood-Wallpaper-Background-18.jpg");
+    background-image: url("/pics/blurred.jpg");
+    background-position: center;
     background-size: cover;
-*/
+}
+body::selection, div::selection, h1::selection, p::selection, button::selection, input::selection, img::selection, h3::selection {
+    background: yellowgreen;
+    color: whitesmoke;
+}
+#display {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,0));
 }
 #menuDiv {
     position: fixed;
     width: 12%;
     height: 80%;
     left: 2.5%;
-    background: linear-gradient(green, lightgreen);
+    background-image: url("/pics/grass.jpg");
+    background-size: 140vw;
     border-left: 1px solid black;
     border-right: 1px solid black;
     border-bottom: 1px solid black;
@@ -22,21 +31,21 @@ body {
     width: 100%;
     height: 50px;
     color: white;
-    background-color: darkgreen;
+    text-align: center;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 14px;
+    background: linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,0));
     top: 120px;
     margin-bottom: 15px;
     border: none;
     cursor: pointer;
-    text-align: center;
     transition: .15s;
     outline: none;
 }
 #greens {
-    color: black;
-    height: 55px;
-    background-color: greenyellow;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
+    height: 60px;
+    font-size: 19px;
+    background: linear-gradient(rgba(0,0,0,.9),rgba(0,0,0,0));
 }
 #displayDiv {
     position: fixed;
@@ -47,24 +56,24 @@ body {
 #title {
     position: relative;
     font-size: 70px;
-    font-family: "your ideal typeface", Verdana, sans-serif;
+    font-family: 'Oswald', sans-serif;
     color: limegreen;
     text-align: center;
     margin-left: -40px;
     text-shadow: 3px 3px 3px #000, 3px 3px 3px #000;
-    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0.5)));
+    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0.3)));
 }
 #category {
     position: relative;
     top: -20px;
     color: burlywood;
-    font-family: Tahoma, Geneva, sans-serif;
+    font-family: 'Baloo', sans-serif;
     font-variant: small-caps;
     font-size: 40px;
     text-align: center;
     margin-left: -40px;
     text-shadow: 3px 3px 3px #000, 3px 3px 3px #000;
-    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.2)), to(rgba(0,0,0,1)));
+    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.1)), to(rgba(0,0,0,1)));
 }
 #gDiv, #mDiv, #sDiv, #bgDiv, #mbDiv, #dDiv {
     display: inline;
@@ -85,9 +94,13 @@ body {
     height: 90%;
     top: 15px;
     left: 3%;
-    margin-bottom: 20px;
+    color: white;
+    font-family: 'Josefin Sans', sans-serif;
+    text-shadow: 1.5px 1.5px 1px #000, 1.5px 1.5px 1px #000;
+    margin-bottom: -18px;
     margin-right: 20px;
-    border-top: 5px solid green;
+    border-top: 7px double black;
+    border-radius: 10px;
 }
 .newTitle, .newImg, .newPrice, .newPriceC {
     position: relative;
@@ -95,8 +108,7 @@ body {
 }
 .newTitle {
     text-align: center;
-    font-family: Tahoma, Geneva, sans-serif;
-    font-size: 20px;
+    font-size: 25px;
 }
 .newImg {
     width: 500px;
@@ -106,25 +118,57 @@ body {
 }
 .newPrice, .newPriceC {
     top: 35px;
+    left: 50%;
     display: inline;
     text-align: center;
-    font-family: Tahoma, Geneva, sans-serif;
 }
 .newPrice {
     font-size: 30px;
+    margin-left: -500px;
 }
 .newPriceC {
     font-size: 25px;
 }
 .Plus, .Minus, .Counter {
+    position: relative;
     display: inline;
     font-size: 25px;
+    left: 50%;
+    top: 5px;
 }
 .Plus, .Minus {
-    width: 20px;
+    width: 15px;
+    cursor: pointer;
+    margin-left: 3px;
+    margin-right: 3px;
 }
 .Plus {
-    width: 15px;
+    margin-left: -25px;
+}
+.Minus {
+    width: 16px;
+    margin-left: 5px;
+}
+.Counter {
+    width: 20px;
+}
+.add2Cart {
+    position: relative;
+    width: 100px;
+    height: 27.5px;
+    left: 50%;
+    margin-left: 122.5px;
+    color: white;
+    font-size: 15px;
+    font-family: 'Josefin Sans', sans-serif;
+    border-radius: 20px;
+    background: linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,0));
+    cursor: pointer;
+    outline: none;
+    transition: background 0.2s ease;
+}
+.add2Cart:hover {
+    background: linear-gradient(rgba(0,0,0,.9), rgba(0,0,0,0));
 }
 #cart {
     position: absolute;
@@ -160,12 +204,12 @@ body {
     top: 10px;
     left: 10px;
     cursor: pointer;
-    transition: .2s;
+    transition: .1s;
 }
 #backButton:hover {
-    width: 55px;
-    top: 8px;
-    left: 8px;
+    width: 57.5px;
+    top: 7px;
+    left: 6px;
 }
 #cartTitle {
     position: relative;
@@ -180,7 +224,6 @@ body {
     height: 55%;
     top: 20px;
     left: 10%;
-    background-color: beige;
     overflow-y: scroll;
 }
 #cusName, #checkout {
@@ -194,4 +237,16 @@ body {
 }
 #checkout {
     width: 71%;
+}
+
+::-webkit-scrollbar {
+    width: 20px;
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 5px 0 28px rgba(0,0,0,0.9); 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 10px 0px 19px yellowgreen;
 }

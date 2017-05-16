@@ -111,7 +111,7 @@ app.post("/menu/order", function(req,resp){
         orderNum = 1;
         orders[orderNum] = req.body.order;
     }
-    Object.keys(red.body.order).forEach(function(key){
+    Object.keys(req.body.order).forEach(function(key){
         itemsSold[key] += key;
     })
     dayTotal += parseInt(req.body.totalCost);

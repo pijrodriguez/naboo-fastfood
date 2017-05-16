@@ -244,6 +244,7 @@ addItemSave.addEventListener("click", function(){
             addItemNameInput.value = "";
             addItemPriceInput.value = "";
             addItemImgInput.value = "";
+            selectItemTypeList.value = "greens"
             $("#addItemSuccess").show().delay(3000).fadeOut();
         }
     })

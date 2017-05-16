@@ -25,7 +25,7 @@ io.on("connection", function(socket){
     });
 });
 
-var dbURL = process.env.DATABASE_URL || "postgres://postgres:PASSWORD@localhost:5432/naboo";
+var dbURL = process.env.DATABASE_URL || "postgres://postgres:Jelapij8@localhost:5432/naboo";
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -290,6 +290,7 @@ app.post("/add-item", function(req, resp){
             client.query("INSERT INTO food (item, price, img, type) VALUES ($1, $2, $3, $4)", [req.body.item_name, req.body.item_price, req.body.item_img, req.body.item_type], function(err,result){
                 done();
                 if(err){
+                    console.log(err)
                     return false;
                 }
                 resp.end("Item Added!");

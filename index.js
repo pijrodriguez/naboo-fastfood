@@ -25,7 +25,7 @@ io.on("connection", function(socket){
     });
 });
 
-var dbURL = process.env.DATABASE_URL || "postgres://postgres:PASSWORD@localhost:5432/naboo";
+var dbURL = process.env.DATABASE_URL || "postgres://postgres:Jelapij8@localhost:5432/naboo";
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -55,7 +55,11 @@ app.get("/", function(req, resp){
     resp.sendFile(CLF+"/login-page.html");
 });
 app.get("/kitchen-page", function(req, resp){
-    resp.sendFile(CLF+"/kitchen-page.html");
+    if(req.session.user){
+        resp.sendFile(CLF+"/kitchen-page.html");
+    } else {
+        resp.sendFile(CLF+"/login-page.html");
+    }
 });
 app.get("/admin-page", function(req, resp){
     if(req.session.user){
@@ -313,7 +317,7 @@ app.post("/edit-item", function(req, resp){
                 return false;
             }
 
-            client.query("UPDATE food SET item = $1, price = $2 WHERE item = $3", [req.body.new_item_name, req.body.item_price, req.body.old_item_name], function(err,result){
+            client.query("UPDATE food SET item = $1, price = $2, img = $3, type = $4 WHERE item = $5", [req.body.new_item_name, req.body.item_price, req.body.item_img, req.body.item_type, req.body.old_item_name], function(err,result){
                 done();
                 if(err){
                     return false;
@@ -322,7 +326,29 @@ app.post("/edit-item", function(req, resp){
             })
         })
     };
+
+    if(req.body.type == "select"){
+        pg.connect(dbURL, function (err, client, done) {
+            if (err) {
+                console.log(err);
+                return false;
+            }
+
+            client.query("SELECT * FROM food WHERE item = $1", [req.body.item_name], function(err,result){
+                done();
+                if(err){
+                    return false;
+                }
+
+                resp.send({
+                    status: "Success",
+                    food: result.rows
+                });
+            })
+        })
+    }
 });
+
 
 /**********************************ADD EMPLOYEE*************************************/
 app.post("/add-employee", function(req, resp){
@@ -373,7 +399,7 @@ app.post("/edit-employee", function(req, resp){
                 return false;
             }
 
-            client.query("UPDATE users SET emp_id = $1, name = $2, password = $3 WHERE name = $4", [req.body.employee_id, req.body.new_employee_name, req.body.password, req.body.old_employee_name], function(err,result){
+            client.query("UPDATE users SET emp_id = $1, name = $2, type = $3, password = $4 WHERE name = $5", [req.body.employee_id, req.body.new_employee_name, req.body.emp_pos, req.body.pass, req.body.old_employee_name], function(err,result){
                 done();
                 if(err){
                     return false;
@@ -450,7 +476,3 @@ sv.listen(NEWPORT, function(err){
     }
     console.log(NEWPORT+" is running");
 });
-
-
-
-

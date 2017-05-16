@@ -144,17 +144,17 @@ app.post("/menu/order", function(req,resp){
         })
     }
 })
+
 /**********************************KITCHEN*************************************/
-var unmakeOrders = {1:{"Burger":2,"Fish":5,"Saled":2},2:{"Bug":7,"Water":1},3:{"Burger":20,"Fish":5,"Saled":2},4:{"Bug":7,"Water":10},5:{"Burger":2,"Fish":5,"Saled":2},6:{"Bug":7,"Water":1}}
 var binnedItems = {};
-var prepItems = {1:"Fish"};
+var prepItems = {};
+var displayStuff = "allunmake";
 app.post("/updateUnmake", function(req, resp){
 
     if(req.body.status == "served"){
-        console.log(unmakeOrders[req.body.key1][req.body.key2]);
-        console.log(req.body.numOfFood);
-        unmakeOrders[req.body.key1][req.body.key2]= req.body.numOfFood;
-        console.log(unmakeOrders[req.body.key1][req.body.key2]);
+
+        orders[req.body.key1][req.body.key2]= req.body.numOfFood;
+
 
         resp.send({
             status:"success",
@@ -162,10 +162,28 @@ app.post("/updateUnmake", function(req, resp){
     }
 });
 app.post("/checkUnmakeOrder", function(req, resp){
+
+    var unmakes = eval(orders);
+    for (orderNO in unmakes){
+        var isEmptyOrder = true;
+        var anOrder = eval(orders[orderNO]);
+        for (itemId in anOrder){
+            if(orders[orderNO][itemId] !=0){
+                isEmptyOrder=false;
+            }
+        }
+        if(isEmptyOrder != false){
+            delete orders[orderNO];
+        };
+    }
+
     if(req.body.status == "check"){
         resp.send({
             status:"success",
-            unmakeOrders:unmakeOrders
+            unmakeOrders:orders,
+            prepItems:prepItems,
+            binnedItems:binnedItems,
+            displayStuff:displayStuff
         })
     }
 });
@@ -216,6 +234,44 @@ app.post("/madeFood", function(req, resp){
     }
 });
 
+app.post("/checkFoodItem", function (req, resp) {
+    if (req.body.status == "checkFood"){
+        pg.connect(dbURL, function(err, client, done){
+            if(err){
+                console.log(err);
+            }
+            client.query("SELECT item FROM food", [], function(err, result){
+                done();
+                if(err){
+                    console.log(err);
+                }
+                var array = result.rows;
+
+                resp.send({
+                    status: "success",
+                    food: array
+                });
+            });
+        });
+
+    }
+
+})
+
+app.post("/setType", function (req, resp) {
+    if(req.body.status == "set"){
+        displayStuff = req.body.displayStuff
+    }
+})
+
+app.post("/checkBin", function(req, resp){
+    if(req.body.status == "check"){
+        resp.send({
+            status:"success",
+            binnedItems:binnedItems
+        })
+    }
+});
 
 /**********************************OPEN/CLOSE STORE*************************************/
 //OPEN STORE

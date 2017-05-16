@@ -25,7 +25,7 @@ io.on("connection", function(socket){
     });
 });
 
-var dbURL = process.env.DATABASE_URL || "postgres://postgres:Jelapij8@localhost:5432/naboo";
+var dbURL = process.env.DATABASE_URL || "postgres://postgres:PASSWORD@localhost:5432/naboo";
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -111,7 +111,7 @@ app.post("/menu/order", function(req,resp){
         orderNum = 1;
         orders[orderNum] = req.body.order;
     }
-    Object.keys(red.body.order).forEach(function(key){
+    Object.keys(req.body.order).forEach(function(key){
         itemsSold[key] += key;
     })
     dayTotal += parseInt(req.body.totalCost);

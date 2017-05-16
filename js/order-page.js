@@ -37,23 +37,20 @@ $(document).ready(function(){
     //This is for the shopping cart it stores what the user has bought;
     var itemPrices = {};
     var finalItems = {};
+    var maxItems = 10;
     
     //This Function makes the selected menu "glow/highlighted" when it's selected
     var active;
     function glow(active){
         for(var i=0;items.length>i;i++){
             if(items[i]==active){
-                items[i].style.color = "black";
-                items[i].style.height = "55px";
-                items[i].style.backgroundColor = "greenyellow";
-                items[i].style.borderTop = "1px solid black";
-                items[i].style.borderBottom = "1px solid black";
+                items[i].style.height = "60px";
+                items[i].style.fontSize = "19px";
+                items[i].style.background = "linear-gradient(rgba(0,0,0,.9),rgba(0,0,0,0))";
             } else {
-                items[i].style.color = "white";
                 items[i].style.height = "50px";
-                items[i].style.backgroundColor = "darkgreen";
-                items[i].style.borderTop = "0";
-                items[i].style.borderBottom = "0";
+                items[i].style.fontSize = "14px";
+                items[i].style.background = "linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,0))";
             }
         }
     }
@@ -82,7 +79,12 @@ $(document).ready(function(){
 
         Plus.addEventListener("click", function(){
             var initialValue = parseInt(this.parentNode.childNodes[1].innerHTML);
-            this.parentNode.childNodes[1].innerHTML = initialValue + 1;
+            if(initialValue != 6){
+                this.parentNode.childNodes[1].innerHTML = initialValue + 1;
+            }
+            else {
+                alert("COUNTER CAN'T GO ABOVE 6.");
+            }
         });
 
         Minus.addEventListener("click", function(){
@@ -100,6 +102,12 @@ $(document).ready(function(){
         counterDiv.appendChild(add2Cart);
         add2Cart.addEventListener("click",function(){
             var quantity = parseInt(this.parentNode.childNodes[1].innerHTML);
+            var currentTotalItems = 0;
+            Object.keys(finalItems).forEach(function(key){
+                currentTotalItems += finalItems[key];
+            });
+            console.log(currentTotalItems);
+            console.log(finalItems);
             var itemName = this.parentNode.parentNode.childNodes[0].innerHTML;
             var cost = parseInt(this.parentNode.parentNode.childNodes[2].innerHTML);
             var purchaseItem = document.createElement("div");
@@ -114,26 +122,14 @@ $(document).ready(function(){
                     }
                 }
                 if (!exists){
-                    this.innerHTML = "update cart";
-                    purchaseItem.className = itemName;
-                currentTotal.innerHTML = (parseInt(currentTotal.innerHTML) + (quantity*cost));
-                purchaseItem.innerHTML = itemName + ": " + quantity + " @ " + cost + "IC each: " + (cost*quantity) + "IC";
-                var removeItem = document.createElement("button");
-                removeItem.innerHTML = "X";
-                removeItem.addEventListener("click",function(){
-                    this.parentNode.remove();
-                    delete finalItems[itemName];
-                    itself.innerHTML = "Add to cart";
-                    itself.parentNode.childNodes[1].innerHTML = 0;
-                    totalCost();
-                })
-                purchaseItem.appendChild(removeItem);
-                list.appendChild(purchaseItem);
-                }
-                else {
-                    for(i=0; i<list.childNodes.length;i++){
-                    if (list.childNodes[i].className==itemName){
-                            list.childNodes[i].innerHTML = itemName + ": " + quantity + " @ " + cost + "IC each: " + (cost*quantity) + "IC";
+                    if ((currentTotalItems + quantity) > maxItems){
+                        alert("TOO MANY ITEMS YOU MAY ONLY ORDER " + (maxItems-currentTotalItems) + " MORE")
+                    }
+                    else{
+                        this.innerHTML = "update cart";
+                        purchaseItem.className = itemName;
+                        currentTotal.innerHTML = (parseInt(currentTotal.innerHTML) + (quantity*cost));
+                        purchaseItem.innerHTML = itemName + ": " + quantity + " @ " + cost + "IC each: " + (cost*quantity) + "IC";
                         var removeItem = document.createElement("button");
                         removeItem.innerHTML = "X";
                         removeItem.addEventListener("click",function(){
@@ -142,13 +138,39 @@ $(document).ready(function(){
                             itself.innerHTML = "Add to cart";
                             itself.parentNode.childNodes[1].innerHTML = 0;
                             totalCost();
-                            })
-                        list.childNodes[i].appendChild(removeItem);
-                        }  
+                        })
+                    purchaseItem.appendChild(removeItem);
+                    list.appendChild(purchaseItem);
+                    finalItems[itemName] =  parseInt(quantity);
+                    totalCost();    
                     }
                 }
-                finalItems[itemName] =  parseInt(quantity);
-                totalCost();
+                else {
+                    var quantChange = 0;
+                    quantChange = quantity - finalItems[itemName];
+                    if((currentTotalItems + quantChange) > 10){
+                        alert("TOO MANY ITEMS YOU MAY ONLY ORDER " + (10-currentTotalItems) + " MORE")
+                    }
+                    else{
+                        for(i=0; i<list.childNodes.length;i++){
+                            if (list.childNodes[i].className==itemName){
+                                list.childNodes[i].innerHTML = itemName + ": " + quantity + " @ " + cost + "IC each: " + (cost*quantity) + "IC";
+                                var removeItem = document.createElement("button");
+                                removeItem.innerHTML = "X";
+                                removeItem.addEventListener("click",function(){
+                                    this.parentNode.remove();
+                                    delete finalItems[itemName];
+                                    itself.innerHTML = "Add to cart";
+                                    itself.parentNode.childNodes[1].innerHTML = 0;
+                                    totalCost();
+                                })
+                            list.childNodes[i].appendChild(removeItem);
+                            }
+                        finalItems[itemName] =  parseInt(quantity);
+                        totalCost();
+                        }
+                    }
+                }
             }
             else {
                 var update = false;
@@ -177,7 +199,6 @@ $(document).ready(function(){
         })
         document.getElementById("total").innerHTML = /*"Total Cost: " +*/ total;
     }
-    
     
     //Storing info into each array
     //And then into different divs
@@ -263,13 +284,16 @@ $(document).ready(function(){
     });
     document.getElementById("checkout").addEventListener("click",function(){
         var name = document.getElementById("cusName");
-        if(name.value != "" && (document.getElementById("ordersList").childNodes >0)){
+        var totalCost = parseInt(document.getElementById("total").innerHTML);
+        console.log(totalCost);
+        if(name.value != "" && (document.getElementById("ordersList").childNodes.length >0)){
             $.ajax({
                 url:"/menu/order",
                 type:"post",
                 data:{
                     order:finalItems,
-                    cusName:name.value
+                    cusName:name.value,
+                    totalCost:totalCost
                 },
                 success:function(resp){
                     if(resp.status == "success"){

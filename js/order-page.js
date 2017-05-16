@@ -44,17 +44,13 @@ $(document).ready(function(){
     function glow(active){
         for(var i=0;items.length>i;i++){
             if(items[i]==active){
-                items[i].style.color = "black";
-                items[i].style.height = "55px";
-                items[i].style.backgroundColor = "greenyellow";
-                items[i].style.borderTop = "1px solid black";
-                items[i].style.borderBottom = "1px solid black";
+                items[i].style.height = "60px";
+                items[i].style.fontSize = "19px";
+                items[i].style.background = "linear-gradient(rgba(0,0,0,.9),rgba(0,0,0,0))";
             } else {
-                items[i].style.color = "white";
                 items[i].style.height = "50px";
-                items[i].style.backgroundColor = "darkgreen";
-                items[i].style.borderTop = "0";
-                items[i].style.borderBottom = "0";
+                items[i].style.fontSize = "14px";
+                items[i].style.background = "linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,0))";
             }
         }
     }

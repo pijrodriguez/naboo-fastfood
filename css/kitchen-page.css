@@ -1,0 +1,32 @@
+#showMaking{
+    position: fixed;
+    bottom: 0;
+    height: auto;
+    width: 95vw;
+}
+.itemsInMaking{
+    display: inline-block;
+    height:auto;
+    width:10vw;
+}
+#make{
+    margin: 0 5vw 0 0;
+}
+#making{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100vw;
+    height:100vh;
+    z-index: -99;
+}
+#alterMaking{
+    width: 95vw;
+    height: auto;
+    color: red;
+    /*display: inline-block;*/
+}
+#serveItem{
+    width:20vw;
+    height: auto;
+}

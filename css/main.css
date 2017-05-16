@@ -1,0 +1,121 @@
+body {
+    margin: 0;
+    background-image: url("/pics/forest1.jpg");
+    background-position: center;
+    background-size: cover;
+}
+#displayDiv {
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(rgba(0,0,0,.2), rgba(15,23,61,.85));
+/*    background: linear-gradient(#66a5ad, #021c1e);*/
+}
+#slideshow, #image, #pause, #play {
+    position: relative;
+}
+#previous, #next, #orderButton {
+    position: absolute;
+}
+#slideshow {
+    width: 80%;
+    height: 350px;
+    left: 10%;
+    top: 50px;
+}
+#image {
+    width: 91.9%;
+    height: 300px;
+    left: 3.75%;
+    border: 3px solid black;
+    border-radius: 15px;
+}
+#previous, #next {
+    width: 3.75%;
+    height: 65px;
+    top: 120px;
+    font-size: 30px;
+    color: white;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: .2s;
+}
+#previous:hover, #next:hover {
+    background: linear-gradient(rgba(0,0,0,.8),rgba(0,0,0,.1));
+    border: 1px outset white;
+}
+#previous:active, #next:active {
+    background: linear-gradient(rgba(0,0,0,.9),rgba(0,0,0,.2));
+    border: 1px inset white;
+}
+#previous {
+    left: 0;
+    border-radius: 20px 0 0 20px;
+}
+#next {
+    right: 0;
+    border-radius: 0 20px 20px 0;
+}
+#pause, #play {
+    display: block;
+    width: 5%;
+    height: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    font-size: 15px;
+    color: white;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: .2s;
+}
+#play{
+    background: rgba(0,0,0,.6);
+    border: 1px inset white;
+}
+#pause {
+    right: 3%;
+}
+#play {
+    left: 3%;
+    top: -30px;
+}
+#orderButton {
+    width: 400px;
+    height: 100px;
+    left: 50%;
+    top: 65%;
+    margin-left: -200px;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 35px;
+    border: 10px outset rgb(150,150,150);
+    border-radius: 35px;
+    color: rgb(150,150,150);
+    background: linear-gradient(rgba(0,0,0,.9),rgba(0,0,0,.1));
+    cursor: pointer;
+    outline: none;
+    transition: .2s;
+}
+#orderButton:hover {
+    width: 450px;
+    height: 115px;
+    top: 64%;
+    margin-left: -225px;
+    font-size: 55px;
+    border: 10px outset white;
+    color: white;
+    background: linear-gradient(rgba(0,0,0,.9),rgba(0,0,0,.5));
+}
+#orderButton:active {
+    width: 450px;
+    height: 115px;
+    top: 64%;
+    margin-left: -225px;
+    font-size: 55px;
+    border: 10px inset white;
+    color: white;
+    background: linear-gradient(rgba(0,0,0,.9),rgba(0,0,0,.9));
+}

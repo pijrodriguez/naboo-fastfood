@@ -1,0 +1,252 @@
+body {
+    margin: 0;
+    background-image: url("/pics/blurred.jpg");
+    background-position: center;
+    background-size: cover;
+}
+body::selection, div::selection, h1::selection, p::selection, button::selection, input::selection, img::selection, h3::selection {
+    background: yellowgreen;
+    color: whitesmoke;
+}
+#display {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,0));
+}
+#menuDiv {
+    position: fixed;
+    width: 12%;
+    height: 80%;
+    left: 2.5%;
+    background-image: url("/pics/grass.jpg");
+    background-size: 140vw;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    box-shadow: -15px 15px 15px rgba(0,0,0,0.5);
+}
+#greens, #meats, #seafood, #bakedGoods, #mollusksBugs, #drinks {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    color: white;
+    text-align: center;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-size: 14px;
+    background: linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,0));
+    top: 120px;
+    margin-bottom: 15px;
+    border: none;
+    cursor: pointer;
+    transition: .15s;
+    outline: none;
+}
+#greens {
+    height: 60px;
+    font-size: 19px;
+    background: linear-gradient(rgba(0,0,0,.9),rgba(0,0,0,0));
+}
+#displayDiv {
+    position: fixed;
+    right: 0;
+    width: 85%;
+    height: 100%;
+}
+#title {
+    position: relative;
+    font-size: 70px;
+    font-family: 'Oswald', sans-serif;
+    color: limegreen;
+    text-align: center;
+    margin-left: -40px;
+    text-shadow: 3px 3px 3px #000, 3px 3px 3px #000;
+    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,1)), to(rgba(0,0,0,0.3)));
+}
+#category {
+    position: relative;
+    top: -20px;
+    color: burlywood;
+    font-family: 'Baloo', sans-serif;
+    font-variant: small-caps;
+    font-size: 40px;
+    text-align: center;
+    margin-left: -40px;
+    text-shadow: 3px 3px 3px #000, 3px 3px 3px #000;
+    -webkit-mask-image: -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.1)), to(rgba(0,0,0,1)));
+}
+#gDiv, #mDiv, #sDiv, #bgDiv, #mbDiv, #dDiv {
+    display: inline;
+    position: fixed;
+    width: 84%;
+    height: 78%;
+    bottom: 5px;
+    right: 0.5%;
+    overflow-y: scroll;
+}
+#mDiv, #sDiv, #bgDiv, #mbDiv, #dDiv{
+    display: none;
+}
+.newDiv {
+    position: relative;
+    display: inline-block;
+    width: 45%;
+    height: 90%;
+    top: 15px;
+    left: 3%;
+    color: white;
+    font-family: 'Josefin Sans', sans-serif;
+    text-shadow: 1.5px 1.5px 1px #000, 1.5px 1.5px 1px #000;
+    margin-bottom: -18px;
+    margin-right: 20px;
+    border-top: 7px double black;
+    border-radius: 10px;
+}
+.newTitle, .newImg, .newPrice, .newPriceC {
+    position: relative;
+    top: 10px;
+}
+.newTitle {
+    text-align: center;
+    font-size: 25px;
+}
+.newImg {
+    width: 500px;
+    left: 50%;
+    margin-left: -250px;
+    border: 2px solid black;
+}
+.newPrice, .newPriceC {
+    top: 35px;
+    left: 50%;
+    display: inline;
+    text-align: center;
+}
+.newPrice {
+    font-size: 30px;
+    margin-left: -500px;
+}
+.newPriceC {
+    font-size: 25px;
+}
+.Plus, .Minus, .Counter {
+    position: relative;
+    display: inline;
+    font-size: 25px;
+    left: 50%;
+    top: 5px;
+}
+.Plus, .Minus {
+    width: 15px;
+    cursor: pointer;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+.Plus {
+    margin-left: -25px;
+}
+.Minus {
+    width: 16px;
+    margin-left: 5px;
+}
+.Counter {
+    width: 20px;
+}
+.add2Cart {
+    position: relative;
+    width: 100px;
+    height: 27.5px;
+    left: 50%;
+    margin-left: 122.5px;
+    color: white;
+    font-size: 15px;
+    font-family: 'Josefin Sans', sans-serif;
+    border-radius: 20px;
+    background: linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,0));
+    cursor: pointer;
+    outline: none;
+    transition: background 0.2s ease;
+}
+.add2Cart:hover {
+    background: linear-gradient(rgba(0,0,0,.9), rgba(0,0,0,0));
+}
+#cart {
+    position: absolute;
+    cursor: pointer;
+    width: 55px;
+    top: 3.5%;
+    right: 2%;
+    transition: .2s;
+}
+#cart:hover {
+    width: 65px;
+    right: 1.6%;
+    top: 2.7%;
+}
+#blankDiv {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: -100%;
+    background-color: rgba(0,0,0,0.7);
+}
+#cartSection {
+    position: fixed;
+    height: 100%;
+    width: 30%;
+    right: -30%;
+    background-color: aquamarine;
+    transition: .2s;
+}
+#backButton {
+    position: absolute;
+    width: 50px;
+    top: 10px;
+    left: 10px;
+    cursor: pointer;
+    transition: .1s;
+}
+#backButton:hover {
+    width: 57.5px;
+    top: 7px;
+    left: 6px;
+}
+#cartTitle {
+    position: relative;
+    top: 5px;
+    text-align: center;
+    font-family: "your ideal typeface", Verdana, sans-serif;
+    font-size: 50px;
+}
+#ordersList {
+    position: relative;
+    width: 80%;
+    height: 55%;
+    top: 20px;
+    left: 10%;
+    overflow-y: scroll;
+}
+#cusName, #checkout {
+    position: relative;
+    width: 70%;
+    height: 40px;
+    left: 15%;
+    top: 40px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+#checkout {
+    width: 71%;
+}
+
+::-webkit-scrollbar {
+    width: 20px;
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 5px 0 28px rgba(0,0,0,0.9); 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 10px 0px 19px yellowgreen;
+}

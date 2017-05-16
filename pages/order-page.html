@@ -1,10 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html>
+    <head>
+        <title>Theeden Gardens - Menu</title>
+        <link href="/css/order-page.css" type="text/css" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css?family=Baloo" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet"/>
+    </head>
+    <body>
+        <div id="display">
+            <div id="menuDiv">
+                <button id="greens">Greens</button>
+                <button id="meats">Meats</button>
+                <button id="seafood">Seafood</button>
+                <button id="bakedGoods">Baked Goods</button>
+                <button id="mollusksBugs">Mollusks & Bugs</button>
+                <button id="drinks">Drinks</button>
+            </div>
+            <div id="displayDiv">
+                <div id="title">Theeden Gardens</div>
+                <div id="category">Greens</div>
 
-</body>
+    <!--        The Divs to hold all menu options (initially only show gDiv)-->
+                <div id="gDiv"></div>
+                <div id="mDiv"></div>
+                <div id="sDiv"></div>
+                <div id="bgDiv"></div>
+                <div id="mbDiv"></div>
+                <div id="dDiv"></div>
+            </div>
+            <img id="cart" src="/pics/cart.png" />
+
+            <div id="blankDiv"></div>
+
+            <div id="cartSection">
+                <div id="cartTitle">Cart</div>
+                <img id="backButton" src="/pics/back.png" />
+                <div id="ordersList"></div>
+                <div id="total">0</div>
+                <input id="cusName" placeholder="Enter Your Name"/>
+                <button id="checkout">Checkout</button>
+            </div>
+        </div>
+        <script src="/scripts/orderbundle.js"></script>
+    </body>
 </html>

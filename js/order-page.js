@@ -1,6 +1,6 @@
 $(document).ready(function(){
     console.log("MENU PAGE");
-    
+    var numItems = 1;
     //Variables
     var greens = document.getElementById("greens"),
         meats = document.getElementById("meats"),
@@ -63,7 +63,8 @@ $(document).ready(function(){
         parentDiv.appendChild(counterDiv);
 
         var Plus = document.createElement("img");
-        Plus.className = "Plus";
+        Plus.classList.add("Plus");
+        Plus.id="Plus"+numItems;
         Plus.src = "/pics/plus.png";
         counterDiv.appendChild(Plus);
 
@@ -74,10 +75,11 @@ $(document).ready(function(){
         counterDiv.appendChild(Counter);
 
         var Minus = document.createElement("img");
-        Minus.className = "Minus";
+        Minus.classList.add("Minus");
+        Minus.id="Minus"+numItems;
         Minus.src = "/pics/minus.png";
         counterDiv.appendChild(Minus);
-
+        
         Plus.addEventListener("click", function(){
             var initialValue = parseInt(this.parentNode.childNodes[1].innerHTML);
             if(initialValue != maxPerItem){
@@ -99,6 +101,7 @@ $(document).ready(function(){
 
         var add2Cart = document.createElement("button");
         add2Cart.className = "add2Cart";
+        add2Cart.id="add2Cart"+numItems;
         add2Cart.innerHTML = "Add To Cart";
         counterDiv.appendChild(add2Cart);
         add2Cart.addEventListener("click",function(){
@@ -189,6 +192,7 @@ $(document).ready(function(){
                 }
             }
         })
+        numItems+=1;
     }
     
     // this function is to update the total cost of order

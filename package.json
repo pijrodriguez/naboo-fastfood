@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "test": "mocha"
+    "test": "mocha",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -20,9 +19,11 @@
   "homepage": "https://github.com/A00999371/naboo-fastfood#readme",
   "dependencies": {
     "body-parser": "^1.17.1",
+    "chromedriver": "^2.29.0",
     "express": "^4.15.2",
     "express-session": "^1.15.2",
     "jquery": "^3.2.1",
+    "nightwatch": "^0.9.15",
     "pg": "^6.1.5",
     "socket.io": "^1.7.3",
     "webpack": "^2.5.0"

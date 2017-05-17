@@ -62,23 +62,23 @@ $(document).ready(function(){
         counterDiv.className = "counterDiv";
         parentDiv.appendChild(counterDiv);
 
-        var Plus = document.createElement("img");
-        Plus.classList.add("Plus");
-        Plus.id="Plus"+numItems;
-        Plus.src = "/pics/plus.png";
-        counterDiv.appendChild(Plus);
+        var Minus = document.createElement("img");
+        Minus.classList.add("Minus");
+        Minus.id="Minus"+numItems;
+        Minus.src = "/pics/minus.png";
+        counterDiv.appendChild(Minus);
 
         var Counter = document.createElement("div");
         Counter.className = "Counter";
         Counter.Id = "counter";
         Counter.innerHTML = "0";
         counterDiv.appendChild(Counter);
-
-        var Minus = document.createElement("img");
-        Minus.classList.add("Minus");
-        Minus.id="Minus"+numItems;
-        Minus.src = "/pics/minus.png";
-        counterDiv.appendChild(Minus);
+        
+        var Plus = document.createElement("img");
+        Plus.classList.add("Plus");
+        Plus.id="Plus"+numItems;
+        Plus.src = "/pics/plus.png";
+        counterDiv.appendChild(Plus);
         
         Plus.addEventListener("click", function(){
             var initialValue = parseInt(this.parentNode.childNodes[1].innerHTML);
@@ -202,7 +202,7 @@ $(document).ready(function(){
         Object.keys(finalItems).forEach(function(key){
             total += itemPrices[key] * finalItems[key];
         })
-        document.getElementById("total").innerHTML = /*"Total Cost: " +*/ total;
+        document.getElementById("total").innerHTML = total+" IC";
     }
     
     //Storing info into each array

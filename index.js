@@ -103,46 +103,39 @@ app.post("/menu/items", function(req, resp){
 });
 
 app.post("/menu/order", function(req,resp){
-    if (Object.keys(orders).length < 10){
-        if(orderNum < maxOrders + 1){
-            orders[orderNum] = req.body.order;
-            orderNum += 1;
-        }
-        else {
-            orderNum = 1;
-            orders[orderNum] = req.body.order;
-        }
-        Object.keys(req.body.order).forEach(function(key){
-            itemsSold[key] += key;
-        })
-        dayTotal += parseInt(req.body.totalCost);
-        console.log(dayTotal);
-        console.log(orders);
-        pg.connect(dbURL, function (err, client, done) {
-            if (err) {
-                console.log(err);
-                resp.send({
-                status:"Fail",
-            })
-            }
-            client.query("INSERT INTO orders (cus_name, totalPrice) VALUES ($1,$2)", [req.body.cusName, req.body.totalCost], function(err,result) {
-                done();
-                if(err){
-                    resp.send({
-                    status:"Fail"
-                    })
-                }
-                resp.send({
-                    status:"success"
-                })
-            })
-        })
+    if(orderNum < 5){
+        orders[orderNum] = req.body.order;
+        orderNum += 1;
     }
     else {
-        resp.send({
-            status:"Full"
-        })
+        orderNum = 1;
+        orders[orderNum] = req.body.order;
     }
+    Object.keys(req.body.order).forEach(function(key){
+        itemsSold[key] += key;
+    })
+    dayTotal += parseInt(req.body.totalCost);
+    console.log(dayTotal);
+    console.log(orders);
+    pg.connect(dbURL, function (err, client, done) {
+        if (err) {
+            console.log(err);
+            resp.send({
+                status:"Fail",
+            })
+        }
+        client.query("INSERT INTO orders (cus_name) VALUES ($1)", [req.body.cusName], function(err,result){
+            done();
+            if(err){
+                resp.send({
+                    status:"Fail",
+                })
+            }
+            resp.send({
+                status:"success",
+            })
+        })
+    })
 })
 
 /**********************************KITCHEN*************************************/

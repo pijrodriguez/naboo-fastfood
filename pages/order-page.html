@@ -10,6 +10,7 @@
     <body>
         <div id="display">
             <div id="menuDiv">
+                <img id="mainLogo" src="/pics/logo1.png" />
                 <button id="greens">Greens</button>
                 <button id="meats">Meats</button>
                 <button id="seafood">Seafood</button>
@@ -37,8 +38,9 @@
                 <div id="cartTitle">Cart</div>
                 <img id="backButton" src="/pics/back.png" />
                 <div id="ordersList"></div>
+                <div id="totalString">Total Cost: </div>
                 <div id="total">0</div>
-                <input id="cusName" placeholder="Enter Your Name"/>
+                <input id="cusName" placeholder="Enter Your Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Your Name'"/>
                 <button id="checkout">Checkout</button>
             </div>
         </div>

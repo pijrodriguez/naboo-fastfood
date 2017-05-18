@@ -57,7 +57,7 @@ var maxOrders = 10;
 var orders = {};
 var orderNum = 1;
 
-/*********************************Detect NEW ORDER**********************************/
+/*********************************DETECK NEW ORDER**********************************/
 var orderBefore=0;
 var orderAfter=0;
 
@@ -136,11 +136,13 @@ app.post("/menu/order", function(req,resp){
                     resp.send({
                         status:"Fail",
                     })
-                }
-                resp.send({
+                } else {
+                    resp.send({
                     status:"success",
-                })
-                orderAfter=1;
+
+                    })
+                    orderAfter=1;
+                }
             })
         })
     }

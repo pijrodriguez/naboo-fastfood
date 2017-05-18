@@ -132,10 +132,11 @@ app.post("/menu/order", function(req,resp){
                     resp.send({
                         status:"Fail",
                     })
-                }
-                resp.send({
+                } else {
+                    resp.send({
                     status:"success",
-                })
+                    })
+                }
             })
         })
     }

@@ -57,6 +57,10 @@ var maxOrders = 10;
 var orders = {};
 var orderNum = 1;
 
+/*********************************Detect NEW ORDER**********************************/
+var orderBefore=0;
+var orderAfter=0;
+
 /**********************************ROOT FOLDERS*************************************/
 app.get("/", function(req, resp){
     resp.sendFile(CLF+"/login-page.html");
@@ -136,6 +140,7 @@ app.post("/menu/order", function(req,resp){
                 resp.send({
                     status:"success",
                 })
+                orderAfter=1;
             })
         })
     }
@@ -197,16 +202,37 @@ app.post("/updatePrep", function(req, resp){
         }
         keyOfServedFood.sort();
         for (var i=0; i<req.body.numToRemove;i++){
-            binnedItems[keyOfServedFood[0]]=req.body.food;
             delete prepItems[keyOfServedFood[0]];
             keyOfServedFood.shift();
         }
         resp.send({
             status:"success",
-            prepItems:prepItems
         })
     }
 });
+
+app.post("/updateBin", function(req, resp){
+    if(req.body.status == "throw"){
+        var keyOfServedFood =[]
+        var prepItemskeys = Object.keys(prepItems);
+        for(var i =0;i<prepItemskeys.length;i++){
+            if(prepItems[prepItemskeys[i]] === req.body.food){
+                keyOfServedFood.push(prepItemskeys[i]);
+            }
+        }
+        keyOfServedFood.sort();
+        for (var i=0; i<req.body.numToRemove;i++){
+            binnedItems[keyOfServedFood[0]]=req.body.food;
+            delete prepItems[keyOfServedFood[0]];
+            keyOfServedFood.shift();
+        }
+        resp.send({
+            status:"success"
+        })
+    }
+});
+
+
 
 app.post("/checkPrep", function(req, resp){
     if(req.body.status == "check"){
@@ -269,6 +295,18 @@ app.post("/checkBin", function(req, resp){
             status:"success",
             binnedItems:binnedItems
         })
+    }
+});
+
+app.post("/checkOrderChange", function(req, resp){
+    if(req.body.status == "check"){
+        resp.send({
+            orderBefore:orderBefore,
+            orderAfter:orderAfter
+        })
+
+        orderBefore= 0;
+        orderAfter=0;
     }
 });
 

@@ -49,12 +49,13 @@ var storeIsOpen = true;
 /**********************************TOTAL ORDERS************************************/
 
 var itemsSold ={};
+var dayTotal = 0;
+
 
 /*********************************CURRENT ORDERS************************************/
 var maxOrders = 10;
 var orders = {};
 var orderNum = 1;
-var dayTotal = 0;
 
 /**********************************ROOT FOLDERS*************************************/
 app.get("/", function(req, resp){
@@ -103,39 +104,44 @@ app.post("/menu/items", function(req, resp){
 });
 
 app.post("/menu/order", function(req,resp){
-    if(orderNum < 5){
-        orders[orderNum] = req.body.order;
-        orderNum += 1;
-    }
-    else {
-        orderNum = 1;
-        orders[orderNum] = req.body.order;
-    }
-    Object.keys(req.body.order).forEach(function(key){
-        itemsSold[key] += key;
-    })
-    dayTotal += parseInt(req.body.totalCost);
-    console.log(dayTotal);
-    console.log(orders);
-    pg.connect(dbURL, function (err, client, done) {
-        if (err) {
-            console.log(err);
-            resp.send({
-                status:"Fail",
-            })
+    if(Object.keys(orders).length < maxOrders){
+        if(orderNum < maxOrders + 1){
+            orders[orderNum] = req.body.order;
+            orderNum += 1;
         }
-        client.query("INSERT INTO orders (cus_name) VALUES ($1)", [req.body.cusName], function(err,result){
-            done();
-            if(err){
+        else {
+            orderNum = 1;
+            orders[orderNum] = req.body.order;
+        }
+        Object.keys(req.body.order).forEach(function(key){
+            itemsSold[key] += req.body.order[key];
+        })
+        dayTotal += parseInt(req.body.totalCost);
+        console.log(dayTotal);
+        console.log(orders);
+        pg.connect(dbURL, function (err, client, done) {
+            if (err) {
+                console.log(err);
                 resp.send({
                     status:"Fail",
                 })
             }
-            resp.send({
-                status:"success",
+            client.query("INSERT INTO orders (cus_name,totalprice) VALUES ($1,$2)", [req.body.cusName, req.body.totalCost], function(err,result){
+                done();
+                if(err){
+                    resp.send({
+                        status:"Fail",
+                    })
+                }
+                resp.send({
+                    status:"success",
+                })
             })
         })
-    })
+    }
+    else {
+         resp.send({status:"Full"})
+     }
 })
 
 /**********************************KITCHEN*************************************/

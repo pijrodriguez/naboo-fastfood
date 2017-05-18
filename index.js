@@ -49,12 +49,17 @@ var storeIsOpen = true;
 /**********************************TOTAL ORDERS************************************/
 
 var itemsSold ={};
+var dayTotal = 0;
+
 
 /*********************************CURRENT ORDERS************************************/
-
+var maxOrders = 10;
 var orders = {};
 var orderNum = 1;
-var dayTotal = 0;
+
+/*********************************DETECK NEW ORDER**********************************/
+var orderBefore=0;
+var orderAfter=0;
 
 /**********************************ROOT FOLDERS*************************************/
 app.get("/", function(req, resp){
@@ -103,51 +108,59 @@ app.post("/menu/items", function(req, resp){
 });
 
 app.post("/menu/order", function(req,resp){
-    if(orderNum < 5){
-        orders[orderNum] = req.body.order;
-        orderNum += 1;
-    }
-    else {
-        orderNum = 1;
-        orders[orderNum] = req.body.order;
-    }
-    Object.keys(req.body.order).forEach(function(key){
-        itemsSold[key] += key;
-    })
-    dayTotal += parseInt(req.body.totalCost);
-    console.log(dayTotal);
-    console.log(orders);
-    pg.connect(dbURL, function (err, client, done) {
-        if (err) {
-            console.log(err);
-            resp.send({
-            status:"Fail",
-        })
+    if(Object.keys(orders).length < maxOrders){
+        if(orderNum < maxOrders + 1){
+            orders[orderNum] = req.body.order;
+            orderNum += 1;
         }
-        client.query("INSERT INTO orders (cus_name) VALUES ($1)", [req.body.cusName], function(err,result){
-            done();
-            if(err){
+        else {
+            orderNum = 1;
+            orders[orderNum] = req.body.order;
+        }
+        Object.keys(req.body.order).forEach(function(key){
+            itemsSold[key] += req.body.order[key];
+        })
+        dayTotal += parseInt(req.body.totalCost);
+        console.log(dayTotal);
+        console.log(orders);
+        pg.connect(dbURL, function (err, client, done) {
+            if (err) {
+                console.log(err);
                 resp.send({
-                status:"Fail",
+                    status:"Fail",
                 })
             }
-            resp.send({
-                status:"success",
+            client.query("INSERT INTO orders (cus_name,totalprice) VALUES ($1,$2)", [req.body.cusName, req.body.totalCost], function(err,result){
+                done();
+                if(err){
+                    resp.send({
+                        status:"Fail",
+                    })
+                } else {
+                    resp.send({
+                    status:"success",
+
+                    })
+                    orderAfter=1;
+                }
             })
         })
-    })
+    }
+    else {
+         resp.send({status:"Full"})
+     }
 })
+
 /**********************************KITCHEN*************************************/
-var unmakeOrders = {1:{"Burger":2,"Fish":5,"Saled":2},2:{"Bug":7,"Water":1},3:{"Burger":20,"Fish":5,"Saled":2},4:{"Bug":7,"Water":10},5:{"Burger":2,"Fish":5,"Saled":2},6:{"Bug":7,"Water":1}}
 var binnedItems = {};
-var prepItems = {1:"Fish"};
+var prepItems = {};
+var displayStuff = "allunmake";
 app.post("/updateUnmake", function(req, resp){
 
     if(req.body.status == "served"){
-        console.log(unmakeOrders[req.body.key1][req.body.key2]);
-        console.log(req.body.numOfFood);
-        unmakeOrders[req.body.key1][req.body.key2]= req.body.numOfFood;
-        console.log(unmakeOrders[req.body.key1][req.body.key2]);
+
+        orders[req.body.key1][req.body.key2]= req.body.numOfFood;
+
 
         resp.send({
             status:"success",
@@ -155,10 +168,28 @@ app.post("/updateUnmake", function(req, resp){
     }
 });
 app.post("/checkUnmakeOrder", function(req, resp){
+
+    var unmakes = eval(orders);
+    for (orderNO in unmakes){
+        var isEmptyOrder = true;
+        var anOrder = eval(orders[orderNO]);
+        for (itemId in anOrder){
+            if(orders[orderNO][itemId] !=0){
+                isEmptyOrder=false;
+            }
+        }
+        if(isEmptyOrder != false){
+            delete orders[orderNO];
+        };
+    }
+
     if(req.body.status == "check"){
         resp.send({
             status:"success",
-            unmakeOrders:unmakeOrders
+            unmakeOrders:orders,
+            prepItems:prepItems,
+            binnedItems:binnedItems,
+            displayStuff:displayStuff
         })
     }
 });
@@ -173,16 +204,37 @@ app.post("/updatePrep", function(req, resp){
         }
         keyOfServedFood.sort();
         for (var i=0; i<req.body.numToRemove;i++){
-            binnedItems[keyOfServedFood[0]]=req.body.food;
             delete prepItems[keyOfServedFood[0]];
             keyOfServedFood.shift();
         }
         resp.send({
             status:"success",
-            prepItems:prepItems
         })
     }
 });
+
+app.post("/updateBin", function(req, resp){
+    if(req.body.status == "throw"){
+        var keyOfServedFood =[]
+        var prepItemskeys = Object.keys(prepItems);
+        for(var i =0;i<prepItemskeys.length;i++){
+            if(prepItems[prepItemskeys[i]] === req.body.food){
+                keyOfServedFood.push(prepItemskeys[i]);
+            }
+        }
+        keyOfServedFood.sort();
+        for (var i=0; i<req.body.numToRemove;i++){
+            binnedItems[keyOfServedFood[0]]=req.body.food;
+            delete prepItems[keyOfServedFood[0]];
+            keyOfServedFood.shift();
+        }
+        resp.send({
+            status:"success"
+        })
+    }
+});
+
+
 
 app.post("/checkPrep", function(req, resp){
     if(req.body.status == "check"){
@@ -209,6 +261,56 @@ app.post("/madeFood", function(req, resp){
     }
 });
 
+app.post("/checkFoodItem", function (req, resp) {
+    if (req.body.status == "checkFood"){
+        pg.connect(dbURL, function(err, client, done){
+            if(err){
+                console.log(err);
+            }
+            client.query("SELECT item FROM food", [], function(err, result){
+                done();
+                if(err){
+                    console.log(err);
+                }
+                var array = result.rows;
+
+                resp.send({
+                    status: "success",
+                    food: array
+                });
+            });
+        });
+
+    }
+
+})
+
+app.post("/setType", function (req, resp) {
+    if(req.body.status == "set"){
+        displayStuff = req.body.displayStuff
+    }
+})
+
+app.post("/checkBin", function(req, resp){
+    if(req.body.status == "check"){
+        resp.send({
+            status:"success",
+            binnedItems:binnedItems
+        })
+    }
+});
+
+app.post("/checkOrderChange", function(req, resp){
+    if(req.body.status == "check"){
+        resp.send({
+            orderBefore:orderBefore,
+            orderAfter:orderAfter
+        })
+
+        orderBefore= 0;
+        orderAfter=0;
+    }
+});
 
 /**********************************OPEN/CLOSE STORE*************************************/
 //OPEN STORE

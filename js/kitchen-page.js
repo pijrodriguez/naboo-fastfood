@@ -2,87 +2,25 @@
  * Created by Keson on 2017-05-02.
  */
 
-
-// all unmakeOrders will be store into an array
-// var unmakeOrders;
-// var binnedItems = {};
 var prepItems = {};
-var making=[];
+var foodItems = [];
+checkPrep();
 
-// setInterval(function() {
-//     prepItems[Date.now()]="Burger";
-//     console.log("adding items");
-//     console.log((prepItems));
-// }, 2000);
-
-
-
-//check the prepared items every one second and remove those items that been made longer than 5 minutes
-setInterval(function() {
-
-    checkPrep();
-    var times = Object.keys(prepItems);
-
-    times.forEach(function(time) {
-        if(Date.now()-time>=300000) {
-            // updataBin(time,prepItems[time]);
-            updatePrep(1,prepItems[time]);
-        }
-    });
-
-}, 1000);
-
-// caculate the quantity of a certain food in prepared
-
-function caculatePreparedItem(food) {
-    var foodQty =0;
-    var keys = Object.keys(prepItems);
-    keys.forEach(function (key) {
-        if(prepItems[key] == food){
-            foodQty++;
-        }
-    });
-    console.log(foodQty);
-    return foodQty;
-
-
-
-    // $.ajax({
-    //     url: "/checkPrep",
-    //     type: "post",
-    //     data:{
-    //         status:"check"
-    //     },
-    //     success:function (resp) {
-    //         var itemNumPrep = 0;
-    //         var keys = Object.keys(resp.prepItems);
-    //         keys.forEach(function (key) {
-    //             if(resp.prepItems[key] == food){
-    //                 itemNumPrep++;
-    //             }
-    //         });
-    //         foodQty=itemNumPrep;
-    //
-    //
-    //     }
-    // });
-
-
-
-
-}
-
-
-// console.log(unmakeOrders)
 $(document).ready(function () {
-    // if(checkUnmakeOrder()){
-    //     console.log(unmakeOrders);
-    //     showOrders(unmakeOrders);
-    // }
-    // checkUnmakeOrder();
-
-    checkPrep();
-
+    $.ajax({
+        url:"/checkFoodItem",
+        type:"post",
+        data:{status:"checkFood"},
+        success:function (resp) {
+            for(var i=0; i<resp.food.length;i++){
+                foodItems.push(resp.food[i].item);
+                var option = document.createElement("option");
+                option.text =resp.food[i].item;
+                option.value=resp.food[i].item;
+                document.getElementById("item").add(option);
+            }
+        }
+    });
 
     $.ajax({
         url:"/checkUnmakeOrder",
@@ -92,7 +30,29 @@ $(document).ready(function () {
         },
         success: function (resp) {
             if (resp.status === "success"){
-                showOrders(resp.unmakeOrders);
+                if(resp.displayStuff == "allunmake"){
+                    if (Object.keys(resp.unmakeOrders).length==0){
+                        var noOrder = document.createElement("div");
+                        noOrder.innerHTML = "No order..."+"<br>";
+                        noOrder.style.fontSize = "50px";
+
+                        document.body.appendChild(noOrder);
+                        document.getElementById("serve").style.display = "none";
+                    }else {
+                        showOrders(resp.unmakeOrders);
+                    }
+
+                }
+
+                if(resp.displayStuff == "allPrep"){
+                    showPrep();
+                    document.getElementById("showMaking").style.display = "none";
+                }
+
+                if (resp.displayStuff == "allWasted"){
+                    showBin();
+                    document.getElementById("showMaking").style.display = "none";
+                }
             }
 
         }
@@ -153,36 +113,28 @@ function showOrders(unmakeOrdersClient) {
 
             //when a certain item onclick, showing nessary info in the  bottom of the screem
             itemDiv.addEventListener("click", function () {
+                // this.style.color = "red";
                 document.getElementById("serve").orderId = this.orderId;
                 document.getElementById("serve").itemName = this.itemName;
 
 
                 var prepNum = caculatePreparedItem(this.itemName);
-                document.getElementById("item").innerHTML = this.itemName;
-                document.getElementById("item").name = this.itemName;
-                document.getElementById("item").qtyUmake = this.qty;
-                document.getElementById("item").style.color = "red";
-                document.getElementById("quantity").style.color = "red";
+                document.getElementById("item").value = this.itemName;
+                document.getElementById("serveItem").innerHTML = " : for "+ this.itemName + " of order" + this.orderId;
+                document.getElementById("serveItem").qtyUmake = this.qty;
 
                 document.getElementById("prepared").innerHTML = prepNum;
                 document.getElementById("prepared").style.color = "red";
 
 
                 if(this.qty - prepNum<=0){
-                    //when the quantity of the item need to be made can be served in the prepared map, the "MAKE" button is set to be unclickable
-                    document.getElementById("make").isDisabled = true;
-                    document.getElementById("quantity").innerHTML = "use prep";
-                    document.getElementById("quantity").qtyToMake = 0 ;
 
                 }else if(this.qty - prepNum > 2){
-                    document.getElementById("quantity").innerHTML = 6 ;
-                    document.getElementById("quantity").qtyToMake = 6 ;
+                    document.getElementById("quantity").value = 6;
                 }else if(this.qty - prepNum == 2){
-                    document.getElementById("quantity").innerHTML = 2 ;
-                    document.getElementById("quantity").qtyToMake = 2 ;
+                    document.getElementById("quantity").value = 2;
                 }else if(this.qty - prepNum == 1){
-                    document.getElementById("quantity").innerHTML = 1 ;
-                    document.getElementById("quantity").qtyToMake = 1 ;
+                    document.getElementById("quantity").value = 1;
                 }
 
             })
@@ -207,26 +159,43 @@ function showOrders(unmakeOrdersClient) {
 
 //"MAKE" button onclick: technically add food into prepared map
 document.getElementById("make").addEventListener("click", function () {
-    // $.ajax({
-    //     url:"/madeFood",
-    //     type:"post",
-    //     data:{
-    //         status:"make",
-    //         foodName:document.getElementById("item").name,
-    //         quantity:document.getElementById("quantity").qtyToMake
-    //     },
-    //     success:function (resp) {
-    //         if(resp.status ==="success"){
-    //             document.getElementById("prepared").innerHTML=caculatePreparedItem(document.getElementById("item").name);
-    //         }
-    //     }
-    // })
-    makeFood(document.getElementById("item").name, document.getElementById("quantity").qtyToMake);
-    for(var i =0; i<making.length;i++) {
-        prepItems[making[i]] = document.getElementById("item").name;
-    }
-    console.log(document.getElementById("item").name);
-    document.getElementById("prepared").innerHTML=caculatePreparedItem(document.getElementById("item").name);
+    $.ajax({
+        url:"/madeFood",
+        type:"post",
+        data:{
+            status:"make",
+            foodName:document.getElementById("item").value,
+            quantity:document.getElementById("quantity").value
+        },
+        success:function (resp) {
+            if(resp.status ==="success"){
+                making = resp.making;
+                for(var i =0; i<making.length;i++) {
+                    prepItems[making[i]] = document.getElementById("item").value;
+                }
+                var alterMaking = document.getElementById("alterMaking");
+                var making = document.getElementById("making");
+                var makingImg = document.getElementById("makingImg");
+
+
+                makingImg.src = "/pics/making.gif";
+                makingImg.style.marginLeft="auto";
+                makingImg.style.marginRight = "auto";
+                alterMaking.innerHTML = "MAKING...";
+                alterMaking.style.fontSize="50px";
+
+                making.style.zIndex = 99;
+                making.style.backgroundColor="pink";
+                setTimeout(function () {
+                    alterMaking.innerHTML="";
+                    makingImg.removeAttribute("src");
+                    making.style.backgroundColor="transparent";
+                    making.style.zIndex=-99;
+                    document.getElementById("prepared").innerHTML=caculatePreparedItem(document.getElementById("item").value);
+                },3000);
+            }
+        }
+    });
 
 })
 
@@ -246,7 +215,7 @@ document.getElementById("serve").addEventListener("click", function () {
                 caculatePreparedItem(itemName);
                 if(caculatePreparedItem(itemName)-resp.unmakeOrders[orderId][itemName]>=0){
                     updateUnmake(0,orderId,itemName);
-                    updatePrep(document.getElementById("item").qtyUmake,itemName);
+                    updatePrep(document.getElementById("serveItem").qtyUmake,itemName);
                     location.reload();
                 }else {
                     updateUnmake(resp.unmakeOrders[orderId][itemName]-caculatePreparedItem(itemName),orderId,itemName);
@@ -260,6 +229,54 @@ document.getElementById("serve").addEventListener("click", function () {
     });
 
 })
+
+document.getElementById("allunmake").addEventListener("click", function () {
+    $.ajax({
+        url:"/setType",
+        type:"post",
+        data:{
+            status:"set",
+            displayStuff:"allunmake"
+
+        },
+        success: function (resp) {
+
+        }
+    });
+    location.reload();
+});
+
+document.getElementById("allPrep").addEventListener("click", function () {
+    $.ajax({
+        url:"/setType",
+        type:"post",
+        data:{
+            status:"set",
+            displayStuff:"allPrep"
+
+        },
+        success: function (resp) {
+
+        }
+    });
+    location.reload();
+});
+
+document.getElementById("allWasted").addEventListener("click", function () {
+    $.ajax({
+        url:"/setType",
+        type:"post",
+        data:{
+            status:"set",
+            displayStuff:"allWasted"
+
+        },
+        success: function (resp) {
+
+        }
+    });
+    location.reload();
+});
 
 function updateUnmake(numOfFood,key1,key2) {
     $.ajax({
@@ -297,6 +314,23 @@ function updatePrep(numToRemove,food) {
         }
     });
 }
+function updatebin(numToRemove,food) {
+    $.ajax({
+        url:"/updatebin",
+        type:"post",
+        data:{
+            status:"throw",
+            food:food,
+            numToRemove:numToRemove
+        },
+        success: function (resp) {
+            if (resp.status == "success"){
+                // location.reload();
+            }
+
+        }
+    });
+}
 
 function checkPrep() {
     $.ajax({
@@ -312,39 +346,104 @@ function checkPrep() {
 }
 
 
-function checkUnmakeOrder() {
+// caculate the quantity of a certain food in prepared
+function caculatePreparedItem(food) {
+    var foodQty =0;
+    var keys = Object.keys(prepItems);
+    keys.forEach(function (key) {
+        if(prepItems[key] == food){
+            foodQty++;
+        }
+    });
+    return foodQty;
+
+}
+
+
+//check the prepared items every one second and remove those items that been made longer than 5 minutes
+setInterval(function() {
+
+    // checkPrep();
+    var times = Object.keys(prepItems);
+
+    times.forEach(function(time) {
+        if(Date.now()-time>=300000) {
+            updatebin(1,prepItems[time]);
+        }
+    });
+    location.reload();
+
+}, 30000);
+
+function showBin(){
     $.ajax({
-        url:"/checkUnmakeOrder",
+        url: "/checkBin",
         type: "post",
         data:{
             status:"check"
         },
-        success: function (resp) {
-            if (resp.status === "success"){
-                unmakeOrders= resp.unmakeOrders;
-                return true;
-            }
-
-        }
-    });
-}
-
-function makeFood(foodName,quantity) {
-    $.ajax({
-        url:"/madeFood",
-        type:"post",
-        data:{
-            status:"make",
-            foodName:foodName,
-            quantity:quantity
-        },
         success:function (resp) {
-            if(resp.status ==="success"){
-                making = resp.making;
+            for (var i=0;i<foodItems.length;i++){
+                var foodQty =0;
+                var foodName =foodItems[i];
+                var keys = Object.keys(resp.binnedItems);
+                keys.forEach(function (key) {
+                    if(resp.binnedItems[key] == foodName){
+                        foodQty++;
+                    }
+                });
+
+                var anItem = document.createElement("div");
+                anItem.innerHTML = foodName+" : "+ foodQty +"<br>";
+
+                document.body.appendChild(anItem);
             }
         }
     })
 
+}
+
+function showPrep() {
+    $.ajax({
+        url: "/checkPrep",
+        type: "post",
+        data:{
+            status:"check"
+        },
+        success:function (resp) {
+            for (var i=0;i<foodItems.length;i++){
+                var foodQty =0;
+                var foodName =foodItems[i];
+                var keys = Object.keys(resp.prepItems);
+                keys.forEach(function (key) {
+                    if(resp.prepItems[key] == foodName){
+                        foodQty++;
+                    }
+                });
+
+                var anItem = document.createElement("div");
+                anItem.innerHTML = foodName+" : "+ foodQty +"<br>";
+
+                document.body.appendChild(anItem);
+            }
+        }
+    })
 
 }
+setInterval(function() {
+
+    $.ajax({
+        url: "/checkOrderChange",
+        type: "post",
+        data:{
+            status:"check"
+        },
+        success:function (resp) {
+            if(resp.orderBefore != resp.orderAfter){
+                location.reload();
+            }
+        }
+    })
+
+}, 1000);
 

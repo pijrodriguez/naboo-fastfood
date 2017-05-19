@@ -28,11 +28,8 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
 }
 #mainLogo {
     position: absolute;
-    width: 60px;
-    top: 15px;
-    left: 50%;
-    margin-left: -30px;
-    opacity: .6;
+    width: 15vw;
+    margin-left: -21px;
 }
 #greens, #meats, #seafood, #bakedGoods, #mollusksBugs, #drinks {
     position: relative;

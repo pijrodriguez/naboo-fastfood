@@ -24,12 +24,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+
                 <a class="navbar-brand" href="/admin-page">Naboo</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
+                    <li><a id="checkSalesButton">Sales</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Manage items <span class="caret"></span></a>
                         <ul class="dropdown-menu">
@@ -61,7 +63,20 @@
             <button type="button" class="btn btn-primary btn-lg btn-block" id="openStoreButton">Open Store</button>
             <button type="button" class="btn btn-default btn-lg btn-block" id="closeStoreButton">Close Store</button>
         </div>
+    </div>
 
+    <div id="checkSalesDiv">
+        <div id="left">
+            <select id="datesList" class="form-control"></select>
+            <button class="btn btn-default" id="checkButton">Check</button>
+        </div>
+
+        <div id="right">
+            <label>Search date:</label>
+            <input type="text" id="searchBar" class="form-control" placeholder="yyyy-mm-dd">
+            <button id="searchDate" class="btn btn-default">Search</button>
+        </div>
+        <div id="displayTable"></div>
     </div>
 
     <div id="addItemDiv" class="displayDivs">

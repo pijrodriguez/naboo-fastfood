@@ -40,7 +40,15 @@ var addItemButton = document.getElementById("addItemButton"),
     closeStoreButton = document.getElementById("closeStoreButton"),
     employeeName = document.getElementById("employeeName"),
     employeeId = document.getElementById("employeeId"),
-    logoutButton = document.getElementById("logoutButton")
+    logoutButton = document.getElementById("logoutButton"),
+    checkSalesButton = document.getElementById("checkSalesButton"),
+    adminSettingsDiv = document.getElementById("adminSettingsDiv"),
+    checkSalesDiv = document.getElementById("checkSalesDiv"),
+    datesList = document.getElementById("datesList"),
+    checkButton = document.getElementById("checkButton"),
+    searchBar = document.getElementById("searchBar"),
+    searchDate = document.getElementById("searchDate"),
+    displayTable = document.getElementById("displayTable")
 ;
 
 //***********************SETTING DISPLAY DIV******************************//
@@ -52,6 +60,8 @@ addItemButton.addEventListener("click", function(){
     addEmployeeDiv.style.display = "none";
     removeEmployeeDiv.style.display = "none";
     editEmployeeDiv.style.display = "none";
+    checkSalesDiv.style.display = "none";
+    adminSettingsDiv.style.display = "none";
 });
 
 removeItemButton.addEventListener("click", function(){
@@ -61,6 +71,8 @@ removeItemButton.addEventListener("click", function(){
     addEmployeeDiv.style.display = "none";
     removeEmployeeDiv.style.display = "none";
     editEmployeeDiv.style.display = "none";
+    checkSalesDiv.style.display = "none";
+    adminSettingsDiv.style.display = "none";
 
     //*****************************DROP DOWN LIST**********************************//
 
@@ -91,6 +103,8 @@ editItemButton.addEventListener("click", function(){
     addEmployeeDiv.style.display = "none";
     removeEmployeeDiv.style.display = "none";
     editEmployeeDiv.style.display = "none";
+    checkSalesDiv.style.display = "none";
+    adminSettingsDiv.style.display = "none";
 
     //*****************************DROP DOWN LIST**********************************//
 
@@ -131,6 +145,8 @@ addEmployeeButton.addEventListener("click", function(){
     addEmployeeDiv.style.display = "block";
     removeEmployeeDiv.style.display = "none";
     editEmployeeDiv.style.display = "none";
+    checkSalesDiv.style.display = "none";
+    adminSettingsDiv.style.display = "none";
 });
 
 removeEmployeeButton.addEventListener("click", function(){
@@ -140,6 +156,8 @@ removeEmployeeButton.addEventListener("click", function(){
     addEmployeeDiv.style.display = "none";
     removeEmployeeDiv.style.display = "block";
     editEmployeeDiv.style.display = "none";
+    checkSalesDiv.style.display = "none";
+    adminSettingsDiv.style.display = "none";
 
     //*****************************DROP DOWN LIST**********************************//
 
@@ -171,6 +189,8 @@ editEmployeeButton.addEventListener("click", function(){
     addEmployeeDiv.style.display = "none";
     removeEmployeeDiv.style.display = "none";
     editEmployeeDiv.style.display = "block";
+    checkSalesDiv.style.display = "none";
+    adminSettingsDiv.style.display = "none";
 
     //*****************************DROP DOWN LIST**********************************//
 
@@ -205,6 +225,37 @@ editEmployeeButton.addEventListener("click", function(){
 
 });
 
+checkSalesButton.addEventListener("click", function(){
+    addItemDiv.style.display = "none";
+    removeItemDiv.style.display = "none";
+    editItemDiv.style.display = "none";
+    addEmployeeDiv.style.display = "none";
+    removeEmployeeDiv.style.display = "none";
+    editEmployeeDiv.style.display = "none";
+    adminSettingsDiv.style.display = "none";
+    checkSalesDiv.style.display = "block";
+
+    //ajax to server to get the dates from the db
+    datesList.innerHTML = "";
+    displayTable.innerHTML = "";
+    $.ajax({
+        url:"/get-dates",
+        type:"post",
+        success:function(resp){
+            if(resp.status == "Success"){
+                console.log(resp.dates);
+                var datesAvailable = resp.dates;
+                for(i=0;i<datesAvailable.length;i++){
+                    var newDate = document.createElement("option");
+                    newDate.value = datesAvailable[i].date;
+                    newDate.textContent = datesAvailable[i].date;
+                    datesList.appendChild(newDate);
+                }
+            }
+        }
+    })
+});
+
 //*******************************************************************//
 //ajax to the server and display the info of the admin that is logged in to the admin-page
 
@@ -224,6 +275,63 @@ $(document).ready(function(){
     })
 
 });
+
+//**************************SALES******************************//
+checkButton.addEventListener("click", function(){
+    displayTable.innerHTML = "";
+    $.ajax({
+        url:"/get-sales",
+        type:"post",
+        data:{
+            date_selected: datesList.value,
+            type: "check"
+        },
+        success:function(resp){
+            if(resp.status = "Success"){
+                console.log(resp);
+                var tableValues = resp.sales;
+
+                //create the elements
+                var salesTable = document.createElement("table");
+                salesTable.className = "table table-striped";
+                var header = document.createElement("thead");
+                var headerRow = document.createElement("tr");
+                var itemName = document.createElement("th");
+                var itemQuantity = document.createElement("th");
+                var tableBody = document.createElement("tbody");
+
+                //set the header values
+                itemName.innerHTML = "Item Name";
+                itemQuantity.innerHTML = "Quantity";
+
+
+                //append to parent
+                displayTable.appendChild(salesTable);
+                salesTable.appendChild(header);
+                salesTable.appendChild(tableBody);
+                header.appendChild(headerRow);
+                headerRow.appendChild(itemName);
+                headerRow.appendChild(itemQuantity);
+
+                for(i=0;i<tableValues.length;i++){
+                    //create the elements
+                    var newRow = document.createElement("tr");
+                    var item = document.createElement("td");
+                    var qty = document.createElement("td");
+
+                    //set the values
+                    item.innerHTML = tableValues[i].item;
+                    qty.innerHTML = tableValues[i].qty;
+
+                    //apend to parent
+                    newRow.appendChild(item);
+                    newRow.appendChild(qty);
+                    tableBody.appendChild(newRow);
+                }
+            }
+        }
+    })
+})
 
 
 //**************************ADD ITEM******************************//
@@ -317,7 +425,7 @@ editItemSave.addEventListener("click", function(){
         success:function(resp){
             console.log(resp);
             $("#editItemSuccess").show().delay(3000).fadeOut();
-            editItemList.value = "choose"
+            editItemList.value = "choose";
             editItemNameInput.value = "";
             editItemPriceInput.value = "";
             editItemImgInput.value = "";
@@ -340,10 +448,10 @@ addEmployeeSave.addEventListener("click", function(){
         },
         success:function(resp){
             console.log(resp);
+            $("#addEmployeeSuccess").show().delay(3000).fadeOut();
             addEmployeeNameInput.value = "";
             addEmployeeIdInput.value = "";
             addEmployeePasswordInput.value = "";
-            $("#addEmployeeSuccess").show().delay(3000).fadeOut();
         }
     })
 });

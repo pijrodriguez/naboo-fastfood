@@ -130,7 +130,7 @@ app.post("/menu/order", function(req,resp){
         fakeOrder = true;
     }
     if(fakeOrder){
-        resp.send({status:"FUCKYOU"});
+        resp.send({status:"badOrder"});
     }
     else {
         if(Object.keys(orders).length < maxOrders){

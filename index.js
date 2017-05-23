@@ -25,7 +25,7 @@ io.on("connection", function(socket){
     });
 });
 
-var dbURL = process.env.DATABASE_URL || "postgres://postgres:li138@CMCC@localhost:5432/naboo";
+var dbURL = process.env.DATABASE_URL || "postgres://postgres:PASSWORD@localhost:5432/naboo";
 
 app.use(bodyParser.urlencoded({
     extended: true

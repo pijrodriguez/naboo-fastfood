@@ -136,6 +136,7 @@ $(document).ready(function(){
                         purchaseItem.innerHTML = itemName + ": " + quantity + " @ " + cost + "IC each: " + (cost*quantity) + "IC";
                         var removeItem = document.createElement("button");
                         removeItem.innerHTML = "X";
+                        removeItem.className = "removeItem";
                         removeItem.addEventListener("click",function(){
                             this.parentNode.remove();
                             delete finalItems[itemName];
@@ -161,6 +162,7 @@ $(document).ready(function(){
                                 list.childNodes[i].innerHTML = itemName + ": " + quantity + " @ " + cost + "IC each: " + (cost*quantity) + "IC";
                                 var removeItem = document.createElement("button");
                                 removeItem.innerHTML = "X";
+                                removeItem.className = "removeItem";
                                 removeItem.addEventListener("click",function(){
                                     this.parentNode.remove();
                                     delete finalItems[itemName];

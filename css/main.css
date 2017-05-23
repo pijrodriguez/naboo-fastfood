@@ -1,14 +1,13 @@
 body {
     margin: 0;
-    background-image: url("/pics/forest1.jpg");
+    background-image: url("/pics/wood.jpg");
     background-position: center;
     background-size: cover;
 }
 #displayDiv {
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(rgba(0,0,0,.2), rgba(15,23,61,.85));
-/*    background: linear-gradient(#66a5ad, #021c1e);*/
+    background: linear-gradient(rgba(0,0,0,.2), rgba(9,50,15,.75));
 }
 #slideshow, #image, #pause, #play {
     position: relative;
@@ -17,22 +16,20 @@ body {
     position: absolute;
 }
 #slideshow {
-    width: 80%;
-    height: 350px;
-    left: 10%;
-    top: 50px;
+    width: 90%;
+    height: 80%;
+    left: 5%;
 }
 #image {
-    width: 91.9%;
-    height: 300px;
-    left: 3.75%;
-    border: 3px solid black;
-    border-radius: 15px;
+    width: 55%;
+    height: auto;
+    left: 22.5%;
+    margin-top: -2%;
 }
 #previous, #next {
     width: 3.75%;
     height: 65px;
-    top: 120px;
+    top: 40%;
     font-size: 30px;
     color: white;
     background: none;
@@ -50,11 +47,11 @@ body {
     border: 1px inset white;
 }
 #previous {
-    left: 0;
+    left: 15%;
     border-radius: 20px 0 0 20px;
 }
 #next {
-    right: 0;
+    right: 15%;
     border-radius: 0 20px 20px 0;
 }
 #pause, #play {
@@ -87,7 +84,7 @@ body {
     width: 400px;
     height: 100px;
     left: 50%;
-    top: 65%;
+    top: 78%;
     margin-left: -200px;
     font-family: Tahoma, Geneva, sans-serif;
     font-size: 35px;
@@ -102,7 +99,7 @@ body {
 #orderButton:hover {
     width: 450px;
     height: 115px;
-    top: 64%;
+    top: 77%;
     margin-left: -225px;
     font-size: 55px;
     border: 10px outset white;
@@ -110,12 +107,6 @@ body {
     background: linear-gradient(rgba(0,0,0,.9),rgba(0,0,0,.5));
 }
 #orderButton:active {
-    width: 450px;
-    height: 115px;
-    top: 64%;
-    margin-left: -225px;
-    font-size: 55px;
     border: 10px inset white;
-    color: white;
     background: linear-gradient(rgba(0,0,0,.9),rgba(0,0,0,.9));
 }

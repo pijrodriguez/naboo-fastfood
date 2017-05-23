@@ -28,8 +28,11 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
 }
 #mainLogo {
     position: absolute;
-    width: 15vw;
-    margin-left: -21px;
+    width: 175px;
+    top: 5px;
+    left: 50%;
+    margin-left: -87.5px;
+    opacity: .6;
 }
 #greens, #meats, #seafood, #bakedGoods, #mollusksBugs, #drinks {
     position: relative;
@@ -103,6 +106,7 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
     font-family: 'Josefin Sans', sans-serif;
     text-shadow: 1.5px 1.5px 1px #000, 1.5px 1.5px 1px #000;
     margin-right: 20px;
+    margin-bottom: 25px;
     border: none;
 }
 .newTitle, .newImg, .newPrice, .newPriceC {
@@ -127,7 +131,7 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
 }
 .newPrice {
     font-size: 25px;
-    margin-left: -500px;
+    margin-left: -350px;
 }
 .newPriceC {
     font-size: 20px;
@@ -148,7 +152,7 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
 }
 .Minus {
     width: 16px;
-    margin-left: 190px;
+    margin-left: 45px;
     margin-right: 3px;
 }
 .Counter {
@@ -156,23 +160,29 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
 }
 .add2Cart {
     position: absolute;
-    width: 100px;
-    height: 27.5px;
+    width: 150px;
+    height: 35px;
     left: 50%;
     top: 0;
     margin-top: 308px;
-    margin-left: -48px;
+    margin-left: -75px;
     color: white;
     font-size: 15px;
     font-family: 'Josefin Sans', sans-serif;
     border-radius: 20px;
-    background: linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,0));
+    background-color: rgba(0,0,0,.5);
     cursor: pointer;
     outline: none;
-    transition: background 0.2s ease;
+    transition: .15s;
 }
 .add2Cart:hover {
-    background: linear-gradient(rgba(0,0,0,.9), rgba(0,0,0,0));
+    background-color: rgba(0,0,0,.8);
+    width: 250px;
+    height: 60px;
+    font-size: 20px;
+    margin-left: -125px;
+    margin-top: 295.5px;
+    border-radius: 50px;
 }
 #cart {
     position: absolute;
@@ -221,7 +231,7 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
     position: relative;
     top: 5px;
     text-align: center;
-    color: white;
+    color: lime;
     font-family: 'Josefin Sans', sans-serif;
     font-size: 50px;
 }
@@ -229,9 +239,28 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
     position: relative;
     width: 95%;
     height: 55%;
-    top: 20px;
+    top: 18px;
     left: 5%;
+    font-size: 20px;
+    font-family: 'Roboto Slab', serif;
     overflow-y: scroll;
+}
+.removeItem {
+    position: relative;
+    display: block;
+    width: 50px;
+    margin-bottom: 20px;
+    margin-top: 4px;
+    color: lime;
+    background-color: rgba(0,0,0,.2);
+    border: 2px solid limegreen;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: .1s;
+}
+.removeItem:hover {
+    background-color: limegreen;
+    color: white;
 }
 #totalString, #total {
     position: relative;

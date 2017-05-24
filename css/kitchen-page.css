@@ -1,0 +1,69 @@
+#showOption{
+    position: fixed;
+    bottom: 25px;
+    width: auto;
+}
+
+.showCata{
+    display: inline-block;
+    float: left;
+    margin:0 0 0 0;
+}
+
+#showMaking{
+    position: fixed;
+    bottom: 0;
+    height: auto;
+    width: 98vw;
+}
+
+.itemsInMaking{
+    display: inline-block;
+    height:auto;
+    width:10vw;
+}
+#prepared{
+    width: 15px;
+}
+#quantity{
+    width: 4vw;
+}
+
+#make{
+    margin: 0 5vw 0 0;
+}
+
+#making{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100vw;
+    height:100vh;
+    z-index: -99;
+}
+
+#alterMaking{
+    width: 95vw;
+    height: auto;
+    color: red;
+}
+#serveItem{
+    width:45vw;
+    height: auto;
+    font-size: small;
+}
+
+#prepBut{
+    display: block;
+    margin: 10px auto 10px 5px;
+    width:200px;
+    height:30px;
+}
+
+#binBut{
+    display: block;
+    margin: 10px auto 10px 5px;
+    width:200px;
+    height:30px;
+
+}

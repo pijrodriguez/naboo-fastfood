@@ -6,10 +6,12 @@
         <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet"/>
         <link href="https://fonts.googleapis.com/css?family=Baloo" rel="stylesheet"/>
         <link href="https://fonts.googleapis.com/css?family=Josefin+Sans" rel="stylesheet"/>
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet"/>
     </head>
     <body>
         <div id="display">
             <div id="menuDiv">
+                <img id="mainLogo" src="/pics/Logo.png" />
                 <button id="greens">Greens</button>
                 <button id="meats">Meats</button>
                 <button id="seafood">Seafood</button>
@@ -37,8 +39,9 @@
                 <div id="cartTitle">Cart</div>
                 <img id="backButton" src="/pics/back.png" />
                 <div id="ordersList"></div>
+                <div id="totalString">Total Cost: </div>
                 <div id="total">0</div>
-                <input id="cusName" placeholder="Enter Your Name"/>
+                <input id="cusName" placeholder="Enter Your Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Your Name'"/>
                 <button id="checkout">Checkout</button>
             </div>
         </div>

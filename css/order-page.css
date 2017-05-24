@@ -26,6 +26,14 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
     border-bottom: 1px solid black;
     box-shadow: -15px 15px 15px rgba(0,0,0,0.5);
 }
+#mainLogo {
+    position: absolute;
+    width: 175px;
+    top: 5px;
+    left: 50%;
+    margin-left: -87.5px;
+    opacity: .6;
+}
 #greens, #meats, #seafood, #bakedGoods, #mollusksBugs, #drinks {
     position: relative;
     width: 100%;
@@ -97,10 +105,9 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
     color: white;
     font-family: 'Josefin Sans', sans-serif;
     text-shadow: 1.5px 1.5px 1px #000, 1.5px 1.5px 1px #000;
-    margin-bottom: -18px;
     margin-right: 20px;
-    border-top: 7px double black;
-    border-radius: 10px;
+    margin-bottom: 25px;
+    border: none;
 }
 .newTitle, .newImg, .newPrice, .newPriceC {
     position: relative;
@@ -114,7 +121,7 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
     width: 500px;
     left: 50%;
     margin-left: -250px;
-    border: 2px solid black;
+    border: none;
 }
 .newPrice, .newPriceC {
     top: 35px;
@@ -123,11 +130,11 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
     text-align: center;
 }
 .newPrice {
-    font-size: 30px;
-    margin-left: -500px;
+    font-size: 25px;
+    margin-left: -350px;
 }
 .newPriceC {
-    font-size: 25px;
+    font-size: 20px;
 }
 .Plus, .Minus, .Counter {
     position: relative;
@@ -139,36 +146,43 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
 .Plus, .Minus {
     width: 15px;
     cursor: pointer;
-    margin-left: 3px;
-    margin-right: 3px;
 }
 .Plus {
-    margin-left: -25px;
+    margin-left: 3px;
 }
 .Minus {
     width: 16px;
-    margin-left: 5px;
+    margin-left: 45px;
+    margin-right: 3px;
 }
 .Counter {
     width: 20px;
 }
 .add2Cart {
-    position: relative;
-    width: 100px;
-    height: 27.5px;
+    position: absolute;
+    width: 150px;
+    height: 35px;
     left: 50%;
-    margin-left: 122.5px;
+    top: 0;
+    margin-top: 308px;
+    margin-left: -75px;
     color: white;
     font-size: 15px;
     font-family: 'Josefin Sans', sans-serif;
     border-radius: 20px;
-    background: linear-gradient(rgba(0,0,0,.3), rgba(0,0,0,0));
+    background-color: rgba(0,0,0,.5);
     cursor: pointer;
     outline: none;
-    transition: background 0.2s ease;
+    transition: .15s;
 }
 .add2Cart:hover {
-    background: linear-gradient(rgba(0,0,0,.9), rgba(0,0,0,0));
+    background-color: rgba(0,0,0,.8);
+    width: 250px;
+    height: 60px;
+    font-size: 20px;
+    margin-left: -125px;
+    margin-top: 295.5px;
+    border-radius: 50px;
 }
 #cart {
     position: absolute;
@@ -194,8 +208,10 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
     position: fixed;
     height: 100%;
     width: 30%;
-    right: -30%;
-    background-color: aquamarine;
+    right: -32%;
+    color: white;
+    background: linear-gradient(rgb(0,155,0), rgb(0,25,0));
+    border-left: 2px solid white;
     transition: .2s;
 }
 #backButton {
@@ -215,28 +231,91 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
     position: relative;
     top: 5px;
     text-align: center;
-    font-family: "your ideal typeface", Verdana, sans-serif;
+    color: lime;
+    font-family: 'Josefin Sans', sans-serif;
     font-size: 50px;
 }
 #ordersList {
     position: relative;
-    width: 80%;
+    width: 95%;
     height: 55%;
-    top: 20px;
-    left: 10%;
+    top: 18px;
+    left: 5%;
+    font-size: 20px;
+    font-family: 'Roboto Slab', serif;
     overflow-y: scroll;
+}
+.removeItem {
+    position: relative;
+    display: block;
+    width: 50px;
+    margin-bottom: 20px;
+    margin-top: 4px;
+    color: lime;
+    background-color: rgba(0,0,0,.2);
+    border: 2px solid limegreen;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: .1s;
+}
+.removeItem:hover {
+    background-color: limegreen;
+    color: white;
+}
+#totalString, #total {
+    position: relative;
+    color: white;
+    font-family: 'Josefin Sans', sans-serif;
+    text-align: center;
+    font-size: 20px;
+    top: 50px;
 }
 #cusName, #checkout {
     position: relative;
     width: 70%;
     height: 40px;
     left: 15%;
-    top: 40px;
+    top: 70px;
     text-align: center;
     margin-bottom: 10px;
+    transition: .2s;
+    outline: none;
+}
+#cusName {
+    color: white;
+    border: none;
+    background-color: rgba(0,0,0,0);
+    border-bottom: solid 1px green;
+    border-radius: 5px 35px 0 0;
+}
+#cusName:focus {
+    box-shadow: 0 0 35px 1px limegreen;
 }
 #checkout {
     width: 71%;
+    background: rgba(0,0,0,.2);
+    border: 2px solid white;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+}
+#checkout:hover {
+    font-size: 23px;
+    background: white;
+    color: forestgreen;
+}
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: limegreen;
+}
+::-moz-placeholder { /* Firefox 19+ */
+    color: limegreen;
+}
+:-ms-input-placeholder { /* IE 10+ */
+    color: limegreen;
+}
+:-moz-placeholder { /* Firefox 18- */
+    color: limegreen;
 }
 
 ::-webkit-scrollbar {

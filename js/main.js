@@ -1,10 +1,10 @@
 $(document).ready(function(){
     var img1 = new Image();
-    img1.src = "/pics/food1.jpg";
+    img1.src = "/pics/Planet Core Squid Calamari.png";
     var img2 = new Image();
-    img2.src = "/pics/food2.jpg";
+    img2.src = "/pics/Theeden Garden Salad.png";
     var img3 = new Image();
-    img3.src = "/pics/food3.jpg";
+    img3.src = "/pics/Bread with various dips.png";
     var curImg = 1;
     var timeOutS;
     var running = 0;

@@ -2,34 +2,32 @@
 <html lang="en">
 <head>
     <title>Kitchen</title>
-    <style>
-        #showMaking{
-            position: fixed;
-            bottom: 0;
-            height: auto;
-            width: 95vw;
-        }
-        .itemsInMaking{
-            display: inline-block;
-            height:auto;
-            width:15vw;
-        }
-        #make{
-            margin: 0 5vw 0 0;
-        }
-
-    </style>
+    <link href="/css/kitchen-page.css" type="text/css" rel="stylesheet"/>
 </head>
 <body>
+<div id="making">
+    <p id="alterMaking"></p>
+    <img id="makingImg" />
+</div>
+<div id="showOption">
+    <button id="allunmake" class="showCata">ORDERS TO MAKE</button>
+    <button id="allPrep" class="showCata">FOOD IN PREPARATION</button>
+    <button id="allWasted" class="showCata">THREW OUT FOOD</button>
+</div>
 <div id="showMaking">
-    Item: <div id="item" class="itemsInMaking"></div>
-    Quantity: <div id="quantity" class="itemsInMaking"></div>
+
+    <!--Item: <div id="item" class="itemsInMaking"></div>-->
+    Item: <select id="item" class="itemsInMaking"></select>
+    <!--Quantity: <div id="quantity" class="itemsInMaking"></div>-->
+    Quantity: <select id="quantity" class="itemsInMaking">
+        <option value=1>1</option>
+        <option value=2>2</option>
+        <option value=6>6</option>
+    </select>
     <button id="make">MAKE</button>
     Prepared: <div id="prepared" class="itemsInMaking"></div>
-    <button id="serve">Serve</button>
+    <button id="serve">BAG</button>  <div id="serveItem" class="itemsInMaking"></div>
 </div>
-<script src="/socket.io/socket.io.js"></script>
 <script src='/scripts/kitchenbundle.js'></script>
 </body>
-
 </html>

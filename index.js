@@ -43,33 +43,43 @@ app.use(session({
     saveUninitialized:true
 }));
 
-var storeIsOpen = true;
+var storeIsOpen = false;
 
 
 /**********************************TOTAL ORDERS************************************/
 
 var itemsSold ={};
+var dayTotal = 0;
+
 
 /*********************************CURRENT ORDERS************************************/
-
+var maxOrders = 10;
 var orders = {};
 var orderNum = 1;
-var dayTotal = 0;
+var maxItemOrder = 10;
+var maxIndividualItemOrder = 6;
+/*********************************DETECK NEW ORDER**********************************/
+var orderBefore=0;
+var orderAfter=0;
 
 /**********************************ROOT FOLDERS*************************************/
 app.get("/", function(req, resp){
     resp.sendFile(CLF+"/login-page.html");
 });
 app.get("/kitchen-page", function(req, resp){
-    if(req.session.user){
+    if(req.session.type == "c"){
         resp.sendFile(CLF+"/kitchen-page.html");
+    } else if(req.session.type == "a") {
+        resp.sendFile(CLF+"/admin-page.html");
     } else {
         resp.sendFile(CLF+"/login-page.html");
     }
 });
 app.get("/admin-page", function(req, resp){
-    if(req.session.user){
+    if(req.session.type == "a"){
         resp.sendFile(CLF+"/admin-page.html");
+    } else if(req.session.type == "c"){
+        resp.sendFile(CLF+"/kitchen-page.html");
     } else {
         resp.sendFile(CLF+"/login-page.html");
     }
@@ -78,7 +88,12 @@ app.get("/main-page", function(req, resp){
     resp.sendFile(CLF+"/main.html");
 });
 app.get("/order-page", function(req, resp){
+    if(storeIsOpen){
     resp.sendFile(CLF+"/order-page.html");
+    }
+    else {
+        resp.sendFile(CLF+"/main.html");
+    }
 });
 
 /**********************************ORDER/MENU PAGE*************************************/
@@ -103,51 +118,78 @@ app.post("/menu/items", function(req, resp){
 });
 
 app.post("/menu/order", function(req,resp){
-    if(orderNum < 5){
-        orders[orderNum] = req.body.order;
-        orderNum += 1;
+    fakeOrder = false;
+    orderQuant = 0;
+    Object.keys(req.body.order).forEach(function(key){
+        orderQuant += req.body.order[key];
+        if(req.body.order[key] > maxIndividualItemOrder || req.body.order[key] < 0){
+            fakeOrder = true;
+        }
+    });
+    if(orderQuant > maxItemOrder){
+        fakeOrder = true;
+    }
+    if(fakeOrder){
+        resp.send({status:"badOrder"});
     }
     else {
-        orderNum = 1;
-        orders[orderNum] = req.body.order;
-    }
-    Object.keys(req.body.order).forEach(function(key){
-        itemsSold[key] += key;
-    })
-    dayTotal += parseInt(req.body.totalCost);
-    console.log(dayTotal);
-    console.log(orders);
-    pg.connect(dbURL, function (err, client, done) {
-        if (err) {
-            console.log(err);
-            resp.send({
-            status:"Fail",
-        })
-        }
-        client.query("INSERT INTO orders (cus_name) VALUES ($1)", [req.body.cusName], function(err,result){
-            done();
-            if(err){
-                resp.send({
-                status:"Fail",
-                })
+        if(Object.keys(orders).length < maxOrders){
+            if(orderNum < maxOrders + 1){
+                orders[orderNum] = req.body.order;
+                orderNum += 1;
             }
-            resp.send({
-                status:"success",
+            else {
+                orderNum = 1;
+                orders[orderNum] = req.body.order;
+            }
+            Object.keys(req.body.order).forEach(function(key){
+                if(itemsSold[key]){
+                    itemsSold[key] += parseInt(req.body.order[key]);
+                }
+                else {
+                    itemsSold[key] = parseInt(req.body.order[key]);
+                }
             })
-        })
-    })
+            dayTotal += parseInt(req.body.totalCost);
+
+            pg.connect(dbURL, function (err, client, done) {
+                if (err) {
+                    console.log(err);
+                    resp.send({
+                        status:"Fail",
+                    })
+                }
+                client.query("INSERT INTO orders (cus_name,totalprice) VALUES ($1,$2)", [req.body.cusName, req.body.totalCost], function(err,result){
+                    done();
+                    if(err){
+                        resp.send({
+                            status:"Fail",
+                        })
+                    } else {
+                        resp.send({
+                          status:"success"
+                        })
+                        orderAfter=1;
+                    }
+                })
+            })
+        }
+        else {
+             resp.send({status:"Full"})
+         }
+    }
 })
+
 /**********************************KITCHEN*************************************/
-var unmakeOrders = {1:{"Burger":2,"Fish":5,"Saled":2},2:{"Bug":7,"Water":1},3:{"Burger":20,"Fish":5,"Saled":2},4:{"Bug":7,"Water":10},5:{"Burger":2,"Fish":5,"Saled":2},6:{"Bug":7,"Water":1}}
 var binnedItems = {};
-var prepItems = {1:"Fish"};
+var prepItems = {};
+var displayStuff = "allunmake";
 app.post("/updateUnmake", function(req, resp){
 
     if(req.body.status == "served"){
-        console.log(unmakeOrders[req.body.key1][req.body.key2]);
-        console.log(req.body.numOfFood);
-        unmakeOrders[req.body.key1][req.body.key2]= req.body.numOfFood;
-        console.log(unmakeOrders[req.body.key1][req.body.key2]);
+
+        orders[req.body.key1][req.body.key2]= req.body.numOfFood;
+
 
         resp.send({
             status:"success",
@@ -155,10 +197,28 @@ app.post("/updateUnmake", function(req, resp){
     }
 });
 app.post("/checkUnmakeOrder", function(req, resp){
+
+    var unmakes = eval(orders);
+    for (orderNO in unmakes){
+        var isEmptyOrder = true;
+        var anOrder = eval(orders[orderNO]);
+        for (itemId in anOrder){
+            if(orders[orderNO][itemId] !=0){
+                isEmptyOrder=false;
+            }
+        }
+        if(isEmptyOrder != false){
+            delete orders[orderNO];
+        };
+    }
+
     if(req.body.status == "check"){
         resp.send({
             status:"success",
-            unmakeOrders:unmakeOrders
+            unmakeOrders:orders,
+            prepItems:prepItems,
+            binnedItems:binnedItems,
+            displayStuff:displayStuff
         })
     }
 });
@@ -173,16 +233,37 @@ app.post("/updatePrep", function(req, resp){
         }
         keyOfServedFood.sort();
         for (var i=0; i<req.body.numToRemove;i++){
-            binnedItems[keyOfServedFood[0]]=req.body.food;
             delete prepItems[keyOfServedFood[0]];
             keyOfServedFood.shift();
         }
         resp.send({
             status:"success",
-            prepItems:prepItems
         })
     }
 });
+
+app.post("/updateBin", function(req, resp){
+    if(req.body.status == "throw"){
+        var keyOfServedFood =[]
+        var prepItemskeys = Object.keys(prepItems);
+        for(var i =0;i<prepItemskeys.length;i++){
+            if(prepItems[prepItemskeys[i]] === req.body.food){
+                keyOfServedFood.push(prepItemskeys[i]);
+            }
+        }
+        keyOfServedFood.sort();
+        for (var i=0; i<req.body.numToRemove;i++){
+            binnedItems[keyOfServedFood[0]]=req.body.food;
+            delete prepItems[keyOfServedFood[0]];
+            keyOfServedFood.shift();
+        }
+        resp.send({
+            status:"success"
+        })
+    }
+});
+
+
 
 app.post("/checkPrep", function(req, resp){
     if(req.body.status == "check"){
@@ -209,11 +290,62 @@ app.post("/madeFood", function(req, resp){
     }
 });
 
+app.post("/checkFoodItem", function (req, resp) {
+    if (req.body.status == "checkFood"){
+        pg.connect(dbURL, function(err, client, done){
+            if(err){
+                console.log(err);
+            }
+            client.query("SELECT item FROM food", [], function(err, result){
+                done();
+                if(err){
+                    console.log(err);
+                }
+                var array = result.rows;
+
+                resp.send({
+                    status: "success",
+                    food: array
+                });
+            });
+        });
+
+    }
+
+})
+
+app.post("/setType", function (req, resp) {
+    if(req.body.status == "set"){
+        displayStuff = req.body.displayStuff
+    }
+})
+
+app.post("/checkBin", function(req, resp){
+    if(req.body.status == "check"){
+        resp.send({
+            status:"success",
+            binnedItems:binnedItems
+        })
+    }
+});
+
+app.post("/checkOrderChange", function(req, resp){
+    if(req.body.status == "check"){
+        resp.send({
+            orderBefore:orderBefore,
+            orderAfter:orderAfter
+        })
+
+        orderBefore= 0;
+        orderAfter=0;
+    }
+});
 
 /**********************************OPEN/CLOSE STORE*************************************/
 //OPEN STORE
 app.post("/open-store", function(req, resp){
     storeIsOpen = true;
+    itemsSold = {};
 
     //send a response indicating that store is successfully opened
     resp.end("Success");
@@ -222,17 +354,136 @@ app.post("/open-store", function(req, resp){
 //CLOSE STORE
 app.post("/close-store", function(req, resp){
     storeIsOpen = false;
-    //TODO [Anyone] : After store is closed, reset all data from the sales table
+    pg.connect(dbURL, function (err, client, done) {
+        if (err) {
+            console.log(err);
+            resp.end("Failed");
+            return false;
+        }
 
-    //send a response indicating that store is successfully closed
-    resp.end("Success");
-});
+        Object.keys(itemsSold).forEach(function(key){
+            console.log(key);
+            client.query("SELECT * FROM foodsales WHERE date = 'now()' AND item = $1", [key], function(err,result){
+                if(err){
+                    console.log(err);
+                    return false;
+                }
+
+                console.log(result.rows);
+                if(result.rows.length > 0){
+                    var currentTotal = parseInt(result.rows[0].qty);
+                    var newTotal = currentTotal + itemsSold[key];
+                    console.log("TOTAL: " + newTotal);
+                    client.query("UPDATE foodsales SET qty = $1 WHERE item = $2", [newTotal, key], function(err,result){
+                        if(err){
+                            console.log(err);
+                            return false;
+                        }
+
+                    })
+                } else {
+                    client.query("INSERT INTO foodsales (item, qty) VALUES($1, $2)", [key, itemsSold[key]], function(err,result){
+                        if(err){
+                            console.log(err);
+                            return false;
+                        }
+
+                    })
+                }
+                })
+            })
+        done();
+        resp.end("Success");
+    })
+})
+/**********************************ITEMS SOLD*************************************/
+app.post("/get-items-sold", function(req, resp){
+    pg.connect(dbURL, function (err, client, done) {
+        if (err) {
+            console.log(err);
+            return false;
+        }
+
+        client.query("SELECT * FROM foodsales WHERE date = $1", [req.body.date_selected], function(err,result){
+            done();
+            if(err){
+                return false;
+            }
+            resp.send({
+                status: "Success",
+                sales: result.rows
+            });
+        })
+    })
+})
+
+app.post("/get-dates", function(req, resp){
+    pg.connect(dbURL, function (err, client, done) {
+        if (err) {
+            console.log(err);
+            return false;
+        }
+
+        client.query("SELECT DISTINCT date FROM foodsales", function(err,result){
+            done();
+            if(err){
+                return false;
+            }
+            resp.send({
+                status: "Success",
+                dates: result.rows
+            });
+        })
+    })
+})
+
+/**********************************SALES*************************************/
+app.post("/get-dates-sales", function(req, resp){
+    pg.connect(dbURL, function (err, client, done) {
+        if (err) {
+            console.log(err);
+            return false;
+        }
+
+        client.query("SELECT DISTINCT date FROM orders", function(err,result){
+            done();
+            if(err){
+                return false;
+            }
+            resp.send({
+                status: "Success",
+                dates: result.rows
+            });
+        })
+    })
+})
+
+app.post("/get-sales", function(req, resp){
+    pg.connect(dbURL, function (err, client, done) {
+        if (err) {
+            console.log(err);
+            return false;
+        }
+
+        client.query("SELECT * FROM orders WHERE date = $1", [req.body.date_selected], function(err,result){
+            done();
+            if(err){
+                return false;
+            }
+            resp.send({
+                status: "Success",
+                sales: result.rows
+            });
+        })
+    })
+})
 
 /**********************************SEND USER INFO*************************************/
 app.post("/get-user", function(req, resp){
     resp.send({
         status: "Success",
-        user: JSON.stringify(req.session.user)
+        user: JSON.stringify(req.session.user),
+        store: storeIsOpen
     })
 });
 
@@ -459,13 +710,10 @@ app.post("/accountLOGIN", function(req, resp){
             }
             
             if(result.rows.length > 0){
+                req.session.type = result.rows[0].type;
                 req.session.user = result.rows[0];
-                if(result.rows[0].type=="a"){
-                    resp.send({status:"success", user:req.session.user});
-                }
-                if(result.rows[0].type=="c"){
-                    resp.send({status:"success2", user:req.session.user});
-                }
+                resp.send({status:"success", user:req.session.user});
+
             } else {
                 resp.send({status:"fail"});
             }

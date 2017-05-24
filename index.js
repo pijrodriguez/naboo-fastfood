@@ -602,9 +602,10 @@ app.post("/add-employee", function(req, resp){
             client.query("INSERT INTO users (emp_id, type, name, password) VALUES ($1, $2, $3, $4)", [req.body.employee_id, req.body.position, req.body.name, req.body.password], function(err,result){
                 done();
                 if(err){
+                    resp.send({status:"Failed"});
                     return false;
                 }
-                resp.end("Employee Added!");
+                resp.send({status:"Success"});
             })
         })
     };
@@ -642,9 +643,10 @@ app.post("/edit-employee", function(req, resp){
             client.query("UPDATE users SET emp_id = $1, name = $2, type = $3, password = $4 WHERE name = $5", [req.body.employee_id, req.body.new_employee_name, req.body.emp_pos, req.body.pass, req.body.old_employee_name], function(err,result){
                 done();
                 if(err){
+                    resp.send({status:"Failed"});
                     return false;
                 }
-                resp.end("Edit Success!");
+                resp.send({status:"Success"});
             })
         })
     };

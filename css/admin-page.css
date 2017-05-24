@@ -63,7 +63,9 @@
 }
 
 #logoBadge{
-    margin-top: -30px;
+    width: 6vw;
+    height: 5vh;
+     margin: -10px 0 0 0;
 }
 #employeeName, #addItemButton, #removeItemButton, #editItemButton, #addEmployeeButton, #removeEmployeeButton, #editEmployeeButton, #checkItemsSoldButton, #checkSalesButton, #manageItems, #manageEmployees{
     font-family: 'Raleway', sans-serif;
@@ -195,6 +197,11 @@
     margin: 10px 0 15px 25vw;
 }
 
+#addItemSuccess, #addItemFailed {
+    position: absolute;
+    margin-left: 50px;
+}
+
 /**************REMOVE ITEM DIV**************/
 
 #removeItemNameLabel {
@@ -237,6 +244,11 @@
     display: inline-block;
 }
 
+#editItemSuccess, #editItemFailed {
+    position: absolute;
+    margin-left: 50px;
+}
+
 /**************ADD EMPLOYEE DIV**************/
 .addEmployeeLabels {
     margin: 10px 0 0 20px;
@@ -255,6 +267,11 @@
 
 #addEmployeeSave {
     margin: 10px 0 15px 26.5vw;
+}
+
+#addEmployeeSuccess, #addEmployeeFailed, #addEmployeeExists {
+    position: absolute;
+    margin-left: 50px;
 }
 
 /**************REMOVE EMPLOYEE DIV**************/
@@ -296,4 +313,9 @@
 
 #editEmployeeSave {
     margin: 10px 0 15px 25.2vw;
+}
+
+#editEmployeeSuccess, #editEmployeeFailed, #editEmployeeExists {
+    position: absolute;
+    margin-left: 50px;
 }

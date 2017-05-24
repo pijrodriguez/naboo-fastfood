@@ -1,10 +1,10 @@
 $(document).ready(function(){
     var img1 = new Image();
-    img1.src = "/pics/Planet Core Squid Calamari.png";
+    img1.src = "/pics/Massive Fly Poutine Poster.jpg";
     var img2 = new Image();
-    img2.src = "/pics/Theeden Garden Salad.png";
+    img2.src = "/pics/Falumpaset Meat Skewer Poster.jpg";
     var img3 = new Image();
-    img3.src = "/pics/Bread with various dips.png";
+    img3.src = "/pics/Aquatic plant Salad Poster.jpg";
     var curImg = 1;
     var timeOutS;
     var running = 0;

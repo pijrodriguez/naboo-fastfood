@@ -27,7 +27,7 @@
                 </button>
 
                 <a class="navbar-brand" href="/admin-page">
-                    <img alt="Brand" src="/pics/logo-badge.png" id="logoBadge">
+                    <img alt="Brand" src="/pics/badge.png" id="logoBadge">
                 </a>
             </div>
 
@@ -115,17 +115,17 @@
             <div class="bigContainer">
                 <div class="container">
                     <label id="addItemNameLabel" class="addItemLabels">Item Name:</label>
-                    <input type="text" id="addItemNameInput" class="form-control">
+                    <input type="text" title="Only alphabetic characters are allowed" id="addItemNameInput" class="form-control">
                 </div>
 
                 <div class="container">
                     <label id="addItemPriceLabel" class="addItemLabels">Item Price:</label>
-                    <input type="text" id="addItemPriceInput" class="form-control">
+                    <input type="text" title="Only numbers are allowed" id="addItemPriceInput" class="form-control">
                 </div>
 
                 <div class="container">
                     <label id="addItemImgLabel" class="addItemLabels">Item Image URL:</label>
-                    <input type="text" id="addItemImgInput" class="form-control">
+                    <input type="text" title="Only valid URLs are allowed" id="addItemImgInput" class="form-control">
                 </div>
 
                 <div class="container">
@@ -145,7 +145,18 @@
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <strong>Success!</strong> You have successfully added an item.
                 </div>
+                <div class="alert alert-danger alert-dismissible" role="alert" id="addItemFailed" hidden>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Error!</strong> Please make sure all the inputs are valid.
+                </div>
             </div>
+        </div>
+    </div>
+    <!-- Generated markup by the plugin -->
+    <div class="tooltip tooltip-top" role="tooltip" id="names">
+        <div class="tooltip-arrow"></div>
+        <div class="tooltip-inner">
+            Some tooltip text!
         </div>
     </div>
 
@@ -184,17 +195,17 @@
 
                 <div class="container">
                     <label id="editItemNameLabel" class="editItemLabels">Item Name:</label>
-                    <input type="text" id="editItemNameInput" class="form-control">
+                    <input type="text" title="Only alphabetic characters are allowed" id="editItemNameInput" class="form-control">
                 </div>
 
                 <div class="container">
                     <label id="editItemPriceLabel" class="editItemLabels">Item Price:</label>
-                    <input type="text" id="editItemPriceInput" class="form-control">
+                    <input type="text" title="Only numbers are allowed" id="editItemPriceInput" class="form-control">
                 </div>
 
                 <div class="container">
                     <label id="editItemImgLabel" class="editItemLabels">Item Image URL:</label>
-                    <input type="text" id="editItemImgInput" class="form-control">
+                    <input type="text" title="Only valid URLs are allowed" id="editItemImgInput" class="form-control">
                 </div>
 
                 <div class="container">
@@ -216,6 +227,11 @@
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <strong>Success!</strong> You have successfully edited an item.
             </div>
+
+            <div class="alert alert-danger alert-dismissible" role="alert" id="editItemFailed" hidden>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Error!</strong> Please make sure all the inputs are valid.
+            </div>
         </div>
     </div>
 
@@ -228,12 +244,12 @@
             <div class="bigContainer">
                 <div class="container">
                     <label id="addEmployeeNameLabel" class="addEmployeeLabels">Employee Name:</label>
-                    <input type="text" id="addEmployeeNameInput" class="form-control">
+                    <input type="text" title="Only alphabetic characters are allowed" id="addEmployeeNameInput" class="form-control">
                 </div>
 
                 <div class="container">
                     <label id="addEmployeeIdLabel" class="addEmployeeLabels">Employee ID:</label>
-                    <input type="text" id="addEmployeeIdInput" class="form-control">
+                    <input type="text" title="Employee ID should start with 'A' followed by a 3 digit unique employee number" id="addEmployeeIdInput" class="form-control">
                 </div>
 
                 <div class="container">
@@ -246,7 +262,7 @@
 
                 <div class="container">
                     <label id="addEmployeePasswordLabel" class="addEmployeeLabels">Password:</label>
-                    <input type="password" id="addEmployeePasswordInput" class="form-control">
+                    <input type="password" title="Only alphanumeric characters are allowed" id="addEmployeePasswordInput" class="form-control">
                 </div>
                 <button id="addEmployeeSave" class="btn btn-default">SAVE</button>
 
@@ -254,6 +270,16 @@
                 <div class="alert alert-success alert-dismissible" role="alert" id="addEmployeeSuccess" hidden>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <strong>Success!</strong> You have successfully added an employee.
+                </div>
+
+                <div class="alert alert-danger alert-dismissible" role="alert" id="addEmployeeFailed" hidden>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Error!</strong> Please make sure all the inputs are valid.
+                </div>
+
+                <div class="alert alert-danger alert-dismissible" role="alert" id="addEmployeeExists" hidden>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Error!</strong> Employee already exists.
                 </div>
             </div>
         </div>
@@ -295,12 +321,12 @@
 
                 <div class="container">
                     <label id="editEmployeeNameLabel" class="editEmployeeLabels">Employee Name:</label>
-                    <input type="text" id="editEmployeeNameInput" class="form-control">
+                    <input type="text" title="Only alphabetic characters are allowed" id="editEmployeeNameInput" class="form-control">
                 </div>
 
                 <div class="container">
                     <label id="editEmployeeIdLabel" class="editEmployeeLabels">Employee ID:</label>
-                    <input type="text" id="editEmployeeIdInput" class="form-control">
+                    <input type="text" title="Employee ID should start with 'A' followed by a 3 digit unique employee number" id="editEmployeeIdInput" class="form-control">
                 </div>
 
                 <div class="container">
@@ -313,7 +339,7 @@
 
                 <div class="container">
                     <label id="editEmployeePasswordLabel" class="editEmployeeLabels">Password:</label>
-                    <input type="password" id="editEmployeePasswordInput" class="form-control">
+                    <input type="password" title="Only alphanumeric characters are allowed" id="editEmployeePasswordInput" class="form-control">
                 </div>
 
                 <button id="editEmployeeSave" class="btn btn-default">SAVE</button>
@@ -321,6 +347,16 @@
                 <div class="alert alert-success alert-dismissible" role="alert" id="editEmployeeSuccess" hidden>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <strong>Success!</strong> You have successfully edited an employee.
+                </div>
+
+                <div class="alert alert-danger alert-dismissible" role="alert" id="editEmployeeFailed" hidden>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Error!</strong> Please make sure all the inputs are valid.
+                </div>
+
+                <div class="alert alert-danger alert-dismissible" role="alert" id="editEmployeeExists" hidden>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>Error!</strong> Duplicate employee information.
                 </div>
             </div>
         </div>

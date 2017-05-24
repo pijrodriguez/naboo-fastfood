@@ -58,9 +58,9 @@ var addItemButton = document.getElementById("addItemButton"),
     displayTableSales = document.getElementById("displayTableSales"),
     displayTotalSales = document.getElementById("displayTotalSales"),
     displayTotalOrders = document.getElementById("displayTotalOrders"),
-    regExNames = /^[a-zA-Z]{5,50}$/,
+    regExNames = /^[a-zA-Z]{3,50}$/,
     regExURL = /\.(jpg|png|gif)$/,
-    regExPrice = /^[0-9]{1,3}$/,
+    regExPrice = /^[1-9][0-9]{1,3}$/,
     regExEmpId = /^[A][0-9]{1,3}$/,
     regExPassword = /^[a-zA-Z0-9]{5,50}$/
 ;
@@ -531,7 +531,7 @@ addItemImgInput.onkeyup  = function(){
 
 addItemSave.addEventListener("click", function(){
     if(!regExTest(regExNames, addItemNameInput.value)||!regExTest(regExPrice, addItemPriceInput.value)||!regExTest(regExURL, addItemImgInput.value)){
-        alert("Please make sure that all inputs are valid.");
+        $("#addItemFailed").show().delay(3000).fadeOut();
     } else {
         $.ajax({
             url:"/add-item",
@@ -635,7 +635,7 @@ editItemList.addEventListener("change", function () {
 editItemSave.addEventListener("click", function(){
 
     if(!regExTest(regExNames, editItemNameInput.value)||!regExTest(regExPrice, editItemPriceInput.value)||!regExTest(regExURL, editItemImgInput.value)){
-        alert("Please make sure that all inputs are valid.");
+        $("#editItemFailed").show().delay(3000).fadeOut();
     } else {
         $.ajax({
             url: "/edit-item",
@@ -690,7 +690,7 @@ addEmployeePasswordInput.onkeyup = function(){
 addEmployeeSave.addEventListener("click", function(){
 
     if(!regExTest(regExNames, addEmployeeNameInput.value)||!regExTest(regExEmpId, addEmployeeIdInput.value)||!regExTest(regExPassword, addEmployeePasswordInput.value)){
-        alert("Please make sure that all inputs are valid.");
+        $("#addEmployeeFailed").show().delay(3000).fadeOut();
     } else {
         $.ajax({
             url: "/add-employee",
@@ -704,10 +704,14 @@ addEmployeeSave.addEventListener("click", function(){
             },
             success: function (resp) {
                 console.log(resp);
-                $("#addEmployeeSuccess").show().delay(3000).fadeOut();
-                addEmployeeNameInput.value = "";
-                addEmployeeIdInput.value = "";
-                addEmployeePasswordInput.value = "";
+                if(resp.status == "Success"){
+                    $("#addEmployeeSuccess").show().delay(3000).fadeOut();
+                    addEmployeeNameInput.value = "";
+                    addEmployeeIdInput.value = "";
+                    addEmployeePasswordInput.value = "";
+                } else if(resp.status == "Failed"){
+                    $("#addEmployeeExists").show().delay(3000).fadeOut();
+                }
             }
         })
     }
@@ -792,7 +796,7 @@ editEmployeeList.addEventListener("change", function () {
 editEmployeeSave.addEventListener("click", function(){
 
     if(!regExTest(regExNames, editEmployeeNameInput.value)||!regExTest(regExEmpId, editEmployeeIdInput.value)||!regExTest(regExPassword, editEmployeePasswordInput.value)){
-        alert("Please make sure that all inputs are valid.");
+        $("#editEmployeeFailed").show().delay(3000).fadeOut();
     } else {
         $.ajax({
             url: "/edit-employee",
@@ -807,11 +811,15 @@ editEmployeeSave.addEventListener("click", function(){
             },
             success: function (resp) {
                 console.log(resp);
-                $("#editEmployeeSuccess").show().delay(3000).fadeOut();
-                editEmployeeList.value = "choose"
-                editEmployeeNameInput.value = "";
-                editEmployeeIdInput.value = "";
-                editEmployeePasswordInput.value = "";
+                if(resp.status == "Success"){
+                    $("#editEmployeeSuccess").show().delay(3000).fadeOut();
+                    editEmployeeList.value = "choose"
+                    editEmployeeNameInput.value = "";
+                    editEmployeeIdInput.value = "";
+                    editEmployeePasswordInput.value = "";
+                } else if(resp.status == "Failed"){
+                    $("#editEmployeeExists").show().delay(3000).fadeOut();
+                }
             }
         })
     }

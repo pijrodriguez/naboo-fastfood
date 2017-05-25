@@ -1,26 +1,96 @@
-#showOption{
+body {
+    margin: 0;
+    width: 100vw;
+    height: 100vh;
+    color: white;
+    background: linear-gradient(rgb(40,40,40), black);
+}
+.noOrder {
+    position: relative;
+    margin-left: 35px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 125px;
+    color: white;
+}
+.anOrderWindow {
+    position: relative;
+    display: inline-block;
+    width: 30vw;
+    height: 40vh;
+    top: 10px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    font-family: 'Josefin Sans', sans-serif;
+    background-color: rgba(0,0,0,.4);
+    border: 2px solid white;
+    overflow: hidden;
+}
+.orderDiv {
+    font-family: 'Oswald', sans-serif;
+    font-size: 20px;
+    color: black;
+    background-color: white;
+    margin-bottom: 10px;
+}
+.itemDiv {
+    position: relative;
+    width: 95%;
+    left: 2.5%;
+    margin-bottom: 2px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: .15s;
+}
+.itemDiv:hover {
+    opacity: .7;
+}
+#showOption {
     position: fixed;
-    bottom: 25px;
+    bottom: 7%;
     width: auto;
 }
-
-.showCata{
+.showCata {
     display: inline-block;
-    float: left;
-    margin:0 0 0 0;
+    position: relative;
+    width: 200px;
+    height: 30px;
+    left: 20px;
+    margin-left: 10px;
+    color: white;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 15px;
+    background-color: rgba(0,0,0,.3);
+    border: 3px solid green;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: .15s;
+    outline: none;
 }
-
+.showCata:hover {
+    background-color: green;
+}
 #showMaking{
     position: fixed;
-    bottom: 0;
-    height: auto;
     width: 98vw;
+    bottom: 15px;
+    left: 30px;
+    height: auto;
+    font-family: 'Josefin Sans', sans-serif;
 }
-
+#item, #quantity {
+    font-family: 'PT Sans', sans-serif;
+    color: orange;
+    background-color: black;
+    border: 1px solid orange;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+}
 .itemsInMaking{
-    display: inline-block;
+    display: inline;
     height:auto;
-    width:10vw;
+    width: 325px;
+    margin-right: 10px;
 }
 #prepared{
     width: 15px;
@@ -28,11 +98,23 @@
 #quantity{
     width: 4vw;
 }
-
-#make{
-    margin: 0 5vw 0 0;
+#make, #serve {
+    width: 70px;
+    margin-right: 20px;
+    color: white;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 14px;
+    background-color: rgba(0,0,0,.3);
+    border: 1px solid orange;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: .15s;
+    outline: none;
 }
-
+#make:hover, #serve:hover {
+    border: 1px solid rgba(255,110,0,.4);
+    background-color: rgba(255,110,0,.4);
+}
 #making{
     position: absolute;
     top:0;
@@ -41,29 +123,46 @@
     height:100vh;
     z-index: -99;
 }
-
-#alterMaking{
-    width: 95vw;
-    height: auto;
-    color: red;
+#makingImg {
+    position: relative;
+    width: 300px;
+    top: 20vh;
+    left: 50%;
+    margin-left: -150px;
 }
 #serveItem{
     width:45vw;
     height: auto;
     font-size: small;
 }
-
 #prepBut{
     display: block;
     margin: 10px auto 10px 5px;
     width:200px;
     height:30px;
 }
-
 #binBut{
     display: block;
     margin: 10px auto 10px 5px;
     width:200px;
     height:30px;
-
+}
+#logout {
+    position: fixed;
+    width: 200px;
+    height: 40px;
+    bottom: 25px;
+    right: 20px;
+    color: white;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 20px;
+    background-color: rgba(0,0,0,.3);
+    border: 3px solid red;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: .15s;
+    outline: none;
+}
+#logout:hover {
+    background-color: red;
 }

@@ -33,8 +33,8 @@ $(document).ready(function () {
                 if(resp.displayStuff == "allunmake"){
                     if (Object.keys(resp.unmakeOrders).length==0){
                         var noOrder = document.createElement("div");
-                        noOrder.innerHTML = "No order..."+"<br>";
-                        noOrder.style.fontSize = "50px";
+                        noOrder.innerHTML = "No Orders..."+"<br>";
+                        noOrder.className = "noOrder";
 
                         document.body.appendChild(noOrder);
                         document.getElementById("serve").style.display = "none";
@@ -57,6 +57,17 @@ $(document).ready(function () {
 
         }
     });
+    
+    document.getElementById("logout").addEventListener("click", function(){
+        $.ajax({
+            url: "/logout",
+            type: "post",
+            success: function(resp){
+                location.href = "/";
+            }
+        });
+    });
+    
     // var socket = io();
     //
     // // if a new order comes in, the new order will be stored into the unmakeOrder array and refresh the page
@@ -80,31 +91,33 @@ function showOrders(unmakeOrdersClient) {
             break;
         }
         var anOrderWindow = document.createElement("div");
+        anOrderWindow.className = "anOrderWindow";
         var orderDiv = document.createElement("div");
         orderDiv.innerHTML = "ORDER" + key;
-        orderDiv.style.color = "red";
+        orderDiv.className = "orderDiv";
         anOrderWindow.appendChild(orderDiv);
 
         var data2 = eval(unmakeOrdersClient[key]);
         for (var key2 in data2) {
 
             var itemDiv = document.createElement("div");
+            itemDiv.className = "itemDiv";
 
             //user defined attribute to store the item name and the item quantity that ordered
             itemDiv.itemName = key2;
             itemDiv.orderId = key;
             itemDiv.qty = unmakeOrdersClient[key][key2];
 
-            itemDiv.innerHTML =  unmakeOrdersClient[key][key2]+" <- "+key2;
+            itemDiv.innerHTML =  "&nbsp;&nbsp;"+unmakeOrdersClient[key][key2]+" <- "+key2;
 
             if(unmakeOrdersClient[key][key2] == 0){
                 itemDiv.style.backgroundColor = "grey";
             }else {
                 if(color =="green"){
-                    itemDiv.style.backgroundColor = "green";
+                    itemDiv.style.backgroundColor = "seagreen";
                     color = "yellow";
                 }else if (color == "yellow"){
-                    itemDiv.style.backgroundColor = "yellow";
+                    itemDiv.style.backgroundColor = "darkgreen";
                     color = "green";
                 }
             }
@@ -120,7 +133,7 @@ function showOrders(unmakeOrdersClient) {
 
                 var prepNum = caculatePreparedItem(this.itemName);
                 document.getElementById("item").value = this.itemName;
-                document.getElementById("serveItem").innerHTML = " : for "+ this.itemName + " of order" + this.orderId;
+                document.getElementById("serveItem").innerHTML = " : for "+ this.itemName + " of order #" + this.orderId;
                 document.getElementById("serveItem").qtyUmake = this.qty;
 
                 document.getElementById("prepared").innerHTML = prepNum;
@@ -141,17 +154,6 @@ function showOrders(unmakeOrdersClient) {
 
             anOrderWindow.appendChild(itemDiv);
         }
-
-
-
-
-        anOrderWindow.style.margin = "0 2vw 2vw 0";
-        anOrderWindow.style.width = "30vw";
-        anOrderWindow.style.height = "40vh";
-        anOrderWindow.style.float = "left";
-        anOrderWindow.style.borderStyle = "solid";
-        anOrderWindow.style.borderColor = "red";
-        anOrderWindow.style.overflow = "hidden";
         document.body.appendChild(anOrderWindow);
 
     }
@@ -173,21 +175,15 @@ document.getElementById("make").addEventListener("click", function () {
                 for(var i =0; i<making.length;i++) {
                     prepItems[making[i]] = document.getElementById("item").value;
                 }
-                var alterMaking = document.getElementById("alterMaking");
                 var making = document.getElementById("making");
                 var makingImg = document.getElementById("makingImg");
 
 
                 makingImg.src = "/pics/making.gif";
-                makingImg.style.marginLeft="auto";
-                makingImg.style.marginRight = "auto";
-                alterMaking.innerHTML = "MAKING...";
-                alterMaking.style.fontSize="50px";
 
                 making.style.zIndex = 99;
-                making.style.backgroundColor="pink";
+                making.style.backgroundColor="rgba(0,0,0,.9)";
                 setTimeout(function () {
-                    alterMaking.innerHTML="";
                     makingImg.removeAttribute("src");
                     making.style.backgroundColor="transparent";
                     making.style.zIndex=-99;
@@ -446,4 +442,3 @@ setInterval(function() {
     })
 
 }, 1000);
-

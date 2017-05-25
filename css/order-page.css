@@ -156,6 +156,7 @@ body::selection, div::selection, h1::selection, p::selection, button::selection,
     margin-right: 3px;
 }
 .Counter {
+    font-family: 'Roboto Mono', monospace;
     width: 20px;
 }
 .add2Cart {

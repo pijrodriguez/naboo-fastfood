@@ -56,7 +56,8 @@ var dayTotal = 0;
 var maxOrders = 10;
 var orders = {};
 var orderNum = 1;
-
+var maxItemOrder = 10;
+var maxIndividualItemOrder = 6;
 /*********************************DETECK NEW ORDER**********************************/
 var orderBefore=0;
 var orderAfter=0;
@@ -87,7 +88,12 @@ app.get("/main-page", function(req, resp){
     resp.sendFile(CLF+"/main.html");
 });
 app.get("/order-page", function(req, resp){
+    if(storeIsOpen){
     resp.sendFile(CLF+"/order-page.html");
+    }
+    else {
+        resp.sendFile(CLF+"/main.html");
+    }
 });
 
 /**********************************ORDER/MENU PAGE*************************************/
@@ -112,50 +118,66 @@ app.post("/menu/items", function(req, resp){
 });
 
 app.post("/menu/order", function(req,resp){
-    if(Object.keys(orders).length < maxOrders){
-        if(orderNum < maxOrders + 1){
-            orders[orderNum] = req.body.order;
-            orderNum += 1;
+    fakeOrder = false;
+    orderQuant = 0;
+    Object.keys(req.body.order).forEach(function(key){
+        orderQuant += req.body.order[key];
+        if(req.body.order[key] > maxIndividualItemOrder || req.body.order[key] < 0){
+            fakeOrder = true;
         }
-        else {
-            orderNum = 1;
-            orders[orderNum] = req.body.order;
-        }
-        Object.keys(req.body.order).forEach(function(key){
-            if(itemsSold[key]){
-                itemsSold[key] += parseInt(req.body.order[key]);
+    });
+    if(orderQuant > maxItemOrder){
+        fakeOrder = true;
+    }
+    if(fakeOrder){
+        resp.send({status:"badOrder"});
+    }
+    else {
+        if(Object.keys(orders).length < maxOrders){
+            if(orderNum < maxOrders + 1){
+                orders[orderNum] = req.body.order;
+                orderNum += 1;
             }
             else {
-                itemsSold[key] = parseInt(req.body.order[key]);
+                orderNum = 1;
+                orders[orderNum] = req.body.order;
             }
-        })
-        dayTotal += parseInt(req.body.totalCost);
+            Object.keys(req.body.order).forEach(function(key){
+                if(itemsSold[key]){
+                    itemsSold[key] += parseInt(req.body.order[key]);
+                }
+                else {
+                    itemsSold[key] = parseInt(req.body.order[key]);
+                }
+            })
+            dayTotal += parseInt(req.body.totalCost);
 
-        pg.connect(dbURL, function (err, client, done) {
-            if (err) {
-                console.log(err);
-                resp.send({
-                    status:"Fail",
-                })
-            }
-            client.query("INSERT INTO orders (cus_name,totalprice) VALUES ($1,$2)", [req.body.cusName, req.body.totalCost], function(err,result){
-                done();
-                if(err){
+            pg.connect(dbURL, function (err, client, done) {
+                if (err) {
+                    console.log(err);
                     resp.send({
                         status:"Fail",
                     })
-                } else {
-                    resp.send({
-                      status:"success"
-                    })
-                    orderAfter=1;
                 }
+                client.query("INSERT INTO orders (cus_name,totalprice) VALUES ($1,$2)", [req.body.cusName, req.body.totalCost], function(err,result){
+                    done();
+                    if(err){
+                        resp.send({
+                            status:"Fail",
+                        })
+                    } else {
+                        resp.send({
+                          status:"success"
+                        })
+                        orderAfter=1;
+                    }
+                })
             })
-        })
+        }
+        else {
+             resp.send({status:"Full"})
+         }
     }
-    else {
-         resp.send({status:"Full"})
-     }
 })
 
 /**********************************KITCHEN*************************************/
@@ -374,8 +396,8 @@ app.post("/close-store", function(req, resp){
         resp.end("Success");
     })
 })
-/**********************************SALES*************************************/
-app.post("/get-sales", function(req, resp){
+/**********************************ITEMS SOLD*************************************/
+app.post("/get-items-sold", function(req, resp){
     pg.connect(dbURL, function (err, client, done) {
         if (err) {
             console.log(err);
@@ -415,11 +437,53 @@ app.post("/get-dates", function(req, resp){
     })
 })
 
+/**********************************SALES*************************************/
+app.post("/get-dates-sales", function(req, resp){
+    pg.connect(dbURL, function (err, client, done) {
+        if (err) {
+            console.log(err);
+            return false;
+        }
+
+        client.query("SELECT DISTINCT date FROM orders", function(err,result){
+            done();
+            if(err){
+                return false;
+            }
+            resp.send({
+                status: "Success",
+                dates: result.rows
+            });
+        })
+    })
+})
+
+app.post("/get-sales", function(req, resp){
+    pg.connect(dbURL, function (err, client, done) {
+        if (err) {
+            console.log(err);
+            return false;
+        }
+
+        client.query("SELECT * FROM orders WHERE date = $1", [req.body.date_selected], function(err,result){
+            done();
+            if(err){
+                return false;
+            }
+            resp.send({
+                status: "Success",
+                sales: result.rows
+            });
+        })
+    })
+})
+
 /**********************************SEND USER INFO*************************************/
 app.post("/get-user", function(req, resp){
     resp.send({
         status: "Success",
-        user: JSON.stringify(req.session.user)
+        user: JSON.stringify(req.session.user),
+        store: storeIsOpen
     })
 });
 
@@ -560,9 +624,10 @@ app.post("/add-employee", function(req, resp){
             client.query("INSERT INTO users (emp_id, type, name, password) VALUES ($1, $2, $3, $4)", [req.body.employee_id, req.body.position, req.body.name, req.body.password], function(err,result){
                 done();
                 if(err){
+                    resp.send({status:"Failed"});
                     return false;
                 }
-                resp.end("Employee Added!");
+                resp.send({status:"Success"});
             })
         })
     };
@@ -600,9 +665,10 @@ app.post("/edit-employee", function(req, resp){
             client.query("UPDATE users SET emp_id = $1, name = $2, type = $3, password = $4 WHERE name = $5", [req.body.employee_id, req.body.new_employee_name, req.body.emp_pos, req.body.pass, req.body.old_employee_name], function(err,result){
                 done();
                 if(err){
+                    resp.send({status:"Failed"});
                     return false;
                 }
-                resp.end("Edit Success!");
+                resp.send({status:"Success"});
             })
         })
     };

@@ -312,6 +312,9 @@ $(document).ready(function(){
                     else if (resp.status == "Full"){
                         alert("TOO MANY ORDERS CURRENTLY PLEASE WAIT AND TRY AGAIN");
                     }
+                    else if (resp.status=="badOrder"){
+                        alert("THIS ORDER IS INVALID");
+                    }
                     else {
                         alert("error making order");
                     }
